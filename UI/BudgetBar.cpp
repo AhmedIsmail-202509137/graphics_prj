@@ -24,6 +24,14 @@ ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, st
 		chickList[i] = nullptr;
 	}
 }
+CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
+{
+	cowList = new Cow * [15];
+	for (int i = 0; i < 10; i++) {
+		cowList[i] = nullptr;
+	}
+}
+
 
 void ChickIcon::onClick()
 {
@@ -72,6 +80,54 @@ void ChickIcon::onClick()
 }
 
 
+void CowIcon::onClick()
+{
+	//TO DO: add code for cleanup and game exit here
+	/*
+	//draw image of this object in the field
+	window* pWind = pGame->getWind();
+	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+	*/
+
+	//Chick* new_chick = new Chick(pGame, RefPoint, 30, 30, "images\\Chick.png");
+	cout << "Icon Cow Clicked" << endl;
+	if (pGame->budget > 100) {
+		pGame->budget = pGame->budget - 100;
+		pGame->clearBudget();
+		string budget_string = "BUDGET = $" + to_string(pGame->budget);
+		pGame->printBudget(budget_string);
+
+		point p;
+		// 1. Obtain a seed from a non-deterministic source (if available)
+		std::random_device rd1;
+
+		// 2. Seed the Mersenne Twister engine
+		// std::mt19937 is a high-quality pseudo-random number generator
+		std::mt19937 gen1(rd1());
+		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+		p.x = dist1(gen1);
+		//std::cout << "P.X = " << p.x << endl;
+		// 1. Obtain a seed from a non-deterministic source (if available)
+		std::random_device rd2;
+
+		// 2. Seed the Mersenne Twister engine
+		// std::mt19937 is a high-quality pseudo-random number generator
+		std::mt19937 gen2(rd2());
+		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+		p.y = dist2(gen2);
+		//std::cout << "P.Y = " << p.y << endl;
+		//p.x = 300;
+		//p.y = 300;
+		cowList[count] = new Cow(pGame, p, 50, 50, image_path);
+		cowList[count]->draw();
+		count++;
+		//window* pWind = pGame->getWind();
+		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+	}
+}
+
+
+
 
 
 Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : Drawable(r_pGame, r_point, r_width, r_height)
@@ -79,6 +135,8 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 	//First prepare List of images for each icon
 	//To control the order of these images in the menu, reoder them in enum ICONS above	
 	iconsImages[ICON_CHICK] = "images\\chick.jpg";
+	iconsImages[ICON_COW] = "images\\cow.jpg";
+
 
 	point p;
 	p.x = 0;
@@ -88,6 +146,9 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 
 	//For each icon in the tool bar create an object 
 	iconsList[ICON_CHICK] = new ChickIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CHICK]);
+	p.x += config.iconWidth;
+
+	iconsList[ICON_COW] = new CowIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_COW]);
 	p.x += config.iconWidth;
 	//p.x += config.iconWidth;
 	//iconsList[ICON_CHICK] = new ChickIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CHICK]);
