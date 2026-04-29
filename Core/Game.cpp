@@ -180,7 +180,6 @@ void Game::go() const
 		printBudget(budget_string);
 		drawfieldboundary();
 		warehouse();
-		updatestatusbar();
 		getMouseClick(x, y);
 		if (y >= 0 && y < config.toolBarHeight)
 		{

@@ -73,6 +73,7 @@ void ChickIcon::onClick()
 		//p.y = 300;
 		chickList[count]= new Chick(pGame, p, 50, 50, image_path);
 		chickList[count]->draw();
+		pGame->animalCount++;
 		count++;
 		//window* pWind = pGame->getWind();
 		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
@@ -120,6 +121,7 @@ void CowIcon::onClick()
 		//p.y = 300;
 		cowList[count] = new Cow(pGame, p, 50, 50, image_path);
 		cowList[count]->draw();
+		pGame->animalCount++;
 		count++;
 		//window* pWind = pGame->getWind();
 		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
