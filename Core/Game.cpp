@@ -103,7 +103,7 @@ void Game::printBudget(string msg) const
 
 	pWind->SetPen(config.penColor, 50);
 	pWind->SetFont(24, BOLD, BY_NAME, "Arial");
-	pWind->DrawString(config.windWidth-200, config.toolBarHeight + 10, msg);
+	pWind->DrawString(config.windWidth - 575, config.toolBarHeight + 10, msg);
 
 }
 
@@ -114,7 +114,14 @@ void Game::clearStatusBar() const
 	pWind->SetBrush(config.statusBarColor);
 	pWind->DrawRectangle(0, config.windHeight - config.statusBarHeight, config.windWidth, config.windHeight);
 }
+void Game::updatestatusbar() const
+{
+	clearStatusBar();
+	pWind->SetPen(config.penColor);
+	pWind->SetFont(20, BOLD, BY_NAME, "Arial");
 
+
+}
 void Game::printMessage(string msg) const
 {
 	clearStatusBar();	//First clear the status bar
@@ -142,35 +149,39 @@ window* Game::getWind() const
 {
 	return pWind;
 }
-
 void Game::go() const
 {
-	//This function reads the position where the user clicks to determine the desired operation
+	// This function reads the position where the user clicks to determine the desired operation
 	int x, y;
 	bool isExit = false;
 
-	//Change the title
+	// Change the title
 	pWind->ChangeTitle("- - - - - - - - - - Farm Frenzy (CIE101-project) - - - - - - - - - -");
 
 	do
 	{
 		drawStatusText();
-		string budget_string = "BUDGET = $" + to_string(budget);
+
+		// FIXED: Combined the string properly using the + operator and removed the misplaced semicolon
+		string budget_string = "BUDGET = $" + to_string(budget) + " | Chick: $100 | Cow : $200 | water : $50";
+
 		printBudget(budget_string);
-		//printBudget("BUDGET = $1000");
-		getMouseClick(x, y);	//Get the coordinates of the user click
-		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
-		//{
-			//[1] If user clicks on the Toolbar
+
+		// Get the coordinates of the user click
+		getMouseClick(x, y);
+
+		// [1] If user clicks on the Toolbar (Top row)
 		if (y >= 0 && y < config.toolBarHeight)
 		{
 			isExit = gameToolbar->handleClick(x, y);
 		}
-		else if (y >= config.toolBarHeight && y < 2*config.toolBarHeight)
+		// [2] If user clicks on the Budgetbar (Second row)
+		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight)
 		{
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
-		//}
+
+		// Note: Add logic here for clicking the actual play area if needed!
 
 	} while (!isExit);
 }
