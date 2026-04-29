@@ -2,6 +2,7 @@
 #include "../CMUgraphicsLib/CMUgraphics.h"
 #include "../UI/Toolbar.h"
 #include "../UI/BudgetBar.h"
+#include <ctime> // for time function
 
 class Game
 {
@@ -9,12 +10,13 @@ private:
 	window* pWind;	//Pointer to the CMU graphics window
 	Toolbar* gameToolbar;
 	Budgetbar* gameBudgetbar;
+	mutable time_t lastRealTime;
 
 public:
 	int budget = 2000;
-	int timerValue = 60;
+	mutable int timerValue = 60;
 	int goal = 5000;
-	int level = 1;
+	mutable int level = 0;
 	int animalCount = 0;
 
 	Game();
@@ -37,6 +39,8 @@ public:
 	void drawfieldboundary() const; //to set the field boundary	//Print a message on Status bar
 	void warehouse() const;
 
+	void intialTimer() const;
+	void updateTime() const;
 
 	void go() const;
 

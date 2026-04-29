@@ -3,6 +3,8 @@
 
 Game::Game()
 {
+	timerValue = 60;
+	lastRealTime = time(0);
 	//1 - Create the main window
 	pWind = CreateWind(config.windWidth, config.windHeight, config.wx, config.wy);
 
@@ -157,6 +159,30 @@ void Game::drawStatusText() const
 	pWind->DrawString(760, config.windHeight - 35, "Animals: " + to_string(animalCount));
 }
 
+// feature 11
+void Game::intialTimer() const
+{
+	if (timerValue <= 0)
+	{
+		level++;
+		timerValue = 60 - (10 * (level - 1));
+		lastRealTime = time(0);
+	}
+}
+
+// feature 12
+void Game::updateTime() const
+{
+
+	time_t currentRealTime = time(0);
+
+	if (currentRealTime != lastRealTime) {
+		double secondsPassed = difftime(currentRealTime, lastRealTime);
+		timerValue -= (float)secondsPassed;
+		lastRealTime = currentRealTime;
+		intialTimer();
+	}
+}
 
 window* Game::getWind() const
 {
@@ -173,6 +199,7 @@ void Game::go() const
 
 	do
 	{
+		updateTime();
 		drawStatusText();
 
 		string budget_string = "BUDGET = $" + to_string(budget) + " | Chick: $100 | Cow : $200 | water : $50";
@@ -180,17 +207,20 @@ void Game::go() const
 		printBudget(budget_string);
 		drawfieldboundary();
 		warehouse();
-		getMouseClick(x, y);
-		if (y >= 0 && y < config.toolBarHeight)
-		{
-			isExit = gameToolbar->handleClick(x, y);
-		}
-		// [2] If user clicks on the Budgetbar (Second row)
-		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight)
-		{
-			isExit = gameBudgetbar->handleClick(x, y);
-		}
 
+		if (pWind->GetMouseClick(x, y))
+		{
+			if (y >= 0 && y < config.toolBarHeight)
+			{
+				isExit = gameToolbar->handleClick(x, y);
+			}
+			// [2] If user clicks on the Budgetbar (Second row)
+			else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight)
+			{
+				isExit = gameBudgetbar->handleClick(x, y);
+			}
+		}
+		Sleep(30);
 		// Note: Add logic here for clicking the actual play area if needed!
 
 	} while (!isExit);
