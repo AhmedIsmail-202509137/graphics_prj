@@ -43,3 +43,24 @@ void Cow::moveStep()
 	cout << "Icon Cow Clicked" << endl;
 
 }
+
+// Abdelaziz feature 7
+Egg::Egg(Game* r_pGame, point r_point, int r_width, int r_height) : Drawable(r_pGame, r_point, r_width, r_height)
+{
+}
+
+void Egg::draw() const
+{
+	window* pWind = pGame->getWind();
+	pWind->DrawImage("images\\egg.jpg", RefPoint.x, RefPoint.y, width, height);
+}
+
+Milk::Milk(Game* r_pGame, point r_point, int r_width, int r_height) : Drawable(r_pGame, r_point, r_width, r_height)
+{
+}
+
+void Milk::draw() const
+{
+	window* pWind = pGame->getWind();
+	pWind->DrawImage("images\\milk.jpg", RefPoint.x, RefPoint.y, width, height);
+}

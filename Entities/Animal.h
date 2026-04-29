@@ -26,3 +26,17 @@ public:
 	Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void moveStep();
 };
+
+class Egg :public Drawable
+{
+public:
+	Egg(Game* r_pGame, point r_point, int r_width, int r_height);
+	virtual void draw() const override;
+};
+
+class Milk :public Drawable
+{
+public:
+	Milk(Game* r_pGame, point r_point, int r_width, int r_height);
+	virtual void draw() const override;
+};
