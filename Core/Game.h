@@ -34,6 +34,8 @@ public:
 	void printMessage(string msg) const;	//Print a message on Status bar
 
 	void drawStatusText() const;
+	void drawfieldboundary() const; //to set the field boundary	//Print a message on Status bar
+	void warehouse() const;
 
 
 	void go() const;

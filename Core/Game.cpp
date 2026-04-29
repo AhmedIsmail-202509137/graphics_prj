@@ -9,6 +9,9 @@ Game::Game()
 	//2 - create and draw the toolbar
 	createToolbar();
 	createBudgetbar();
+	updatestatusbar();
+	drawfieldboundary();
+	warehouse();
 	//3 - create and draw the backgroundPlayingArea
 
 
@@ -120,7 +123,11 @@ void Game::updatestatusbar() const
 	pWind->SetPen(config.penColor);
 	pWind->SetFont(20, BOLD, BY_NAME, "Arial");
 
-
+}
+void Game::drawfieldboundary() const {
+	pWind->SetPen(config.penColor, config.penWidth);
+	// Draw from below the BudgetBar to above the StatusBar
+	pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight, FRAME);
 }
 void Game::printMessage(string msg) const
 {
@@ -129,6 +136,12 @@ void Game::printMessage(string msg) const
 	pWind->SetPen(config.penColor, 50);
 	pWind->SetFont(24, BOLD, BY_NAME, "Arial");
 	pWind->DrawString(10, config.windHeight - (int)(0.85 * config.statusBarHeight), msg);
+
+}
+void Game::warehouse() const    // Draw the warehouse in the upper right corner of the playing area
+{
+	window* pWind = getWind();
+	pWind->DrawImage("images\\warehouse.jpg", 550, 100, 110, 110);
 
 }
 // Abdelaziz feature 1
@@ -162,15 +175,13 @@ void Game::go() const
 	{
 		drawStatusText();
 
-		// FIXED: Combined the string properly using the + operator and removed the misplaced semicolon
 		string budget_string = "BUDGET = $" + to_string(budget) + " | Chick: $100 | Cow : $200 | water : $50";
 
 		printBudget(budget_string);
-
-		// Get the coordinates of the user click
+		drawfieldboundary();
+		warehouse();
+		updatestatusbar();
 		getMouseClick(x, y);
-
-		// [1] If user clicks on the Toolbar (Top row)
 		if (y >= 0 && y < config.toolBarHeight)
 		{
 			isExit = gameToolbar->handleClick(x, y);
