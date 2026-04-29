@@ -124,6 +124,19 @@ void Game::printMessage(string msg) const
 	pWind->DrawString(10, config.windHeight - (int)(0.85 * config.statusBarHeight), msg);
 
 }
+// Abdelaziz feature 1
+void Game::drawStatusText() const
+{
+	clearStatusBar();
+
+	pWind->SetPen(WHITE, 1);
+	pWind->SetFont(20, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(20, config.windHeight - 35, "Timer: " + to_string(timerValue));
+	pWind->DrawString(260, config.windHeight - 35, "Goal: $" + to_string(goal));
+	pWind->DrawString(520, config.windHeight - 35, "Level: " + to_string(level));
+	pWind->DrawString(760, config.windHeight - 35, "Animals: " + to_string(animalCount));
+}
+
 
 window* Game::getWind() const
 {
@@ -141,7 +154,7 @@ void Game::go() const
 
 	do
 	{
-		printMessage("Ready...");
+		drawStatusText();
 		string budget_string = "BUDGET = $" + to_string(budget);
 		printBudget(budget_string);
 		//printBudget("BUDGET = $1000");
