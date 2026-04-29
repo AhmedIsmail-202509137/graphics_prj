@@ -11,13 +11,14 @@ struct  //contains all game configurations (MAY be loaded from a configuration f
 		//The window is divded into 3 areas: toolbar, playing area, statusbar
 		toolBarHeight = 50,		//Tool Bar Height (distance from top of window to bottom line of toolbar)
 		toolbarItemWidth = 40,			//Width of each icon in toolbar
+		toolbarButtonWidth = 100,
 		statusBarHeight = 50;	//Status Bar Height
 
 	// Remaining Height 
 	int playingAreaHeight = windHeight - toolBarHeight - statusBarHeight;
 
 	color	penColor = BLUE,			//color used to draw lines/write messages
-		bkGrndColor = POWDERBLUE,		//Background color
+		bkGrndColor = LIGHTGREEN,		//Background color
 		statusBarColor = BLACK;	//background color of the status
 	int penWidth = 3;			//width of the pen that draws shapes
 

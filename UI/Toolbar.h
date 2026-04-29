@@ -6,8 +6,10 @@ class ToolbarIcon :public Drawable
 {
 private:
 	string image_path;
+	string buttonText;
+	color buttonColor;
 public:
-	ToolbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	ToolbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path, string text = "", color fillColor = LIGHTGRAY);
 	virtual void draw() const override;
 	virtual void onClick() = 0;   //The action that should be taken when this icon is clicked
 };
@@ -26,6 +28,34 @@ public:
 	virtual void onClick();
 };
 
+class PauseIcon : public ToolbarIcon
+{
+public:
+	PauseIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
+class ResumeIcon : public ToolbarIcon
+{
+public:
+	ResumeIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
+class SaveIcon : public ToolbarIcon
+{
+public:
+	SaveIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
+class LoadGameIcon : public ToolbarIcon
+{
+public:
+	LoadGameIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
 
 // TO DO: The rest of icons in the toolbar
 
@@ -33,7 +63,11 @@ enum ICONS //The icons of the toolbar (you should add more icons)
 {
 	//Note: Icons are ordered here as they appear in menu
 	//If you want to change the menu icons order, change the order here
-	ICON_RESTART,		
+	ICON_RESTART,
+	ICON_PAUSE,
+	ICON_RESUME,
+	ICON_SAVE,
+	ICON_LOAD,
 
 	//TODO: Add more icons names here
 

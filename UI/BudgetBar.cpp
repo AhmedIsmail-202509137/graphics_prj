@@ -92,8 +92,8 @@ void CowIcon::onClick()
 
 	//Chick* new_chick = new Chick(pGame, RefPoint, 30, 30, "images\\Chick.png");
 	cout << "Icon Cow Clicked" << endl;
-	if (pGame->budget > 100) {
-		pGame->budget = pGame->budget - 100;
+	if (pGame->budget > 200) {
+		pGame->budget = pGame->budget - 200;
 		pGame->clearBudget();
 		string budget_string = "BUDGET = $" + to_string(pGame->budget);
 		pGame->printBudget(budget_string);
