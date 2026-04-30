@@ -47,7 +47,6 @@ public:
 	void intialTimer() const;
 	void updateTime() const;
 
-	void clearPlayingArea()const;
 
 	void spawnWolf() const;
 

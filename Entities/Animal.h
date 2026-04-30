@@ -22,9 +22,9 @@ public:
 	void updateCounter();
 	void drawProduct() const;
 
-	void updateCounter();
+
 	virtual void drawCounter() const;
-	void drawProduct() const;
+	
 
 
 
