@@ -267,14 +267,13 @@ void Game::go() const
 		string budget_string = "BUDGET = $" + to_string(budget) + " | Chick: $100 | Cow : $200 | water : $50";
 
 		printBudget(budget_string);
-		drawfieldboundary();
-		warehouse();
+
+
 		clearPlayingArea();
 		gameBudgetbar->updateAnimals();
 		Pause(100);
-
-		if (getMouseClick(x, y) == NO_CLICK)
-			continue;
+		drawfieldboundary();
+		warehouse();
 
 		for (int i = 0; i < WaterIcon::count; i++)
 		{

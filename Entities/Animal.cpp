@@ -217,7 +217,6 @@ void Chick::drawCounter() const
 	pWind->DrawString(counterLeft + 5, counterTop + 2,
 		to_string(remainingTime));
 }
-
 void Cow::drawCounter() const
 {
 	if (maxCounter <= 0)
@@ -229,14 +228,16 @@ void Cow::drawCounter() const
 	if (remainingTime < 0)
 		remainingTime = 0;
 
-	int counterLeft = RefPoint.x + (width / 2) - 14;
-	int counterTop = RefPoint.y + height - 20;
+	int counterLeft = RefPoint.x + 11;
+	int counterTop = RefPoint.y + height + 3;
 
 	pWind->SetPen(BLACK, 1);
 	pWind->SetBrush(WHITE);
 	pWind->DrawRectangle(counterLeft, counterTop,
-		counterLeft + 28, counterTop + 18);
-	pWind->SetFont(15, BOLD, BY_NAME, "Arial");
-	pWind->DrawString(counterLeft + 5, counterTop + 1,
+		counterLeft + 28, counterTop + 20);
+	pWind->SetFont(16, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(counterLeft + 5, counterTop + 2,
 		to_string(remainingTime));
 }
+
+
