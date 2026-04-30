@@ -6,8 +6,10 @@ using namespace std;
 
 int ChickIcon::count = 0;
 int CowIcon::count = 0;
+int WaterIcon::count = 0;
 Chick** ChickIcon::chickList = nullptr;
 Cow** CowIcon::cowList = nullptr;
+point WaterIcon::waterList[15]{};
 
 BudgetbarIcon::BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
 {
@@ -40,6 +42,11 @@ CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string
 			cowList[i] = nullptr;
 		}
 	}
+}
+
+WaterIcon::WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)
+	: BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
+{
 }
 
 
@@ -138,6 +145,34 @@ void CowIcon::onClick()
 	}
 }
 
+void WaterIcon::onClick()
+{
+	cout << "Icon Water Clicked" << endl;
+	if (pGame->budget >= 50 && count < 15) {
+		pGame->budget = pGame->budget - 50;
+		pGame->clearBudget();
+		string budget_string = "BUDGET = $" + to_string(pGame->budget);
+		pGame->printBudget(budget_string);
+
+		point p;
+		int foodAreaSize = 5 * config.toolBarHeight;
+
+		std::random_device rd1;
+		std::mt19937 gen1(rd1());
+		std::uniform_int_distribution<int> dist1(0, config.windWidth - foodAreaSize);
+		p.x = dist1(gen1);
+
+		std::random_device rd2;
+		std::mt19937 gen2(rd2());
+		std::uniform_int_distribution<int> dist2(2 * config.toolBarHeight, config.windHeight - config.statusBarHeight - foodAreaSize);
+		p.y = dist2(gen2);
+
+		waterList[count] = p;
+		pGame->drawFoodAreaAt(p);
+		count++;
+	}
+}
+
 
 
 
@@ -148,6 +183,7 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 	//To control the order of these images in the menu, reoder them in enum ICONS above	
 	iconsImages[ICON_CHICK] = "images\\chick.jpg";
 	iconsImages[ICON_COW] = "images\\cow.jpg";
+	iconsImages[ICON_WATER] = "images\\water.jpg";
 
 
 	point p;
@@ -162,15 +198,17 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 
 	iconsList[ICON_COW] = new CowIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_COW]);
 	p.x += config.iconWidth;
+	iconsList[ICON_WATER] = new WaterIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_WATER]);
+	p.x += config.iconWidth;
 	//p.x += config.iconWidth;
 	//iconsList[ICON_CHICK] = new ChickIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CHICK]);
 }
 
 Budgetbar::~Budgetbar()
 {
-	for (int i = 0; i < ICON_COUNT; i++)
+	for (int i = 0; i < ANIMAL_COUNT; i++)
 		delete iconsList[i];
-	delete iconsList;
+	delete[] iconsList;
 }
 
 void Budgetbar::draw() const

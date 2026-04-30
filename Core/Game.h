@@ -30,6 +30,8 @@ public:
 	void createToolbar();
 	void createBudgetbar();
 	void drawWolf() const;
+	void drawFoodArea() const;
+	void drawFoodAreaAt(point topLeft) const;
 	void clearBudget() const;
 	void printBudget(string msg) const;
 	void clearStatusBar() const;	//Clears the status bar

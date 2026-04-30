@@ -92,7 +92,7 @@ void Game::createBudgetbar()
 	gameBudgetbar = new Budgetbar(this, budgetbarUpperleft, 0, config.toolBarHeight);
 	gameBudgetbar->draw();
 }
-//Ahmed Ismail Feature 6
+//Ahmed Ismail Features 5 & 6
 void Game::drawWolf() const
 {
 	pWind->SetPen(DARKGRAY, 1);
@@ -108,6 +108,27 @@ void Game::drawWolf() const
 	pWind->SetPen(BLACK, 1);
 	pWind->SetBrush(BLACK);
 	pWind->DrawCircle(859, 255, 2, FILLED);
+}
+
+void Game::drawFoodArea() const
+{
+	int foodAreaSize = 1 * config.toolBarHeight;
+	int foodAreaLeft = (config.windWidth - foodAreaSize) / 2;
+	int foodAreaTop = (config.windHeight - foodAreaSize) / 2;
+
+	point p;
+	p.x = foodAreaLeft;
+	p.y = foodAreaTop;
+	drawFoodAreaAt(p);
+}
+
+void Game::drawFoodAreaAt(point topLeft) const
+{
+	int foodAreaSize = 1 * config.toolBarHeight;
+
+	pWind->SetPen(DARKGREEN, 2);
+	pWind->SetBrush(DARKGREEN);
+	pWind->DrawRectangle(topLeft.x, topLeft.y, topLeft.x + foodAreaSize, topLeft.y + foodAreaSize);
 }
 
 void Game::clearBudget() const
@@ -238,6 +259,10 @@ void Game::go() const
 		printBudget(budget_string);
 		drawfieldboundary();
 		warehouse();
+		for (int i = 0; i < WaterIcon::count; i++)
+		{
+			drawFoodAreaAt(WaterIcon::waterList[i]);
+		}
 
 		for (int i = 0; i < ChickIcon::count; i++) 
 		{

@@ -41,6 +41,15 @@ public:
 	virtual void onClick();
 };
 
+class WaterIcon : public BudgetbarIcon
+{
+public:
+	static point waterList[15];
+	static int count;
+	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
 
 // TO DO: The rest of icons in the toolbar
 
@@ -50,6 +59,7 @@ enum ANIMAL_ICONS //The icons of the toolbar (you should add more icons)
 	//If you want to change the menu icons order, change the order here
 	ICON_CHICK,
 	ICON_COW,
+	ICON_WATER,
 
 	//TODO: Add more icons names here
 
