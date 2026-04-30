@@ -4,6 +4,9 @@
 #include <iostream>
 using namespace std;
 
+int Wolf::count = 0;
+Wolf** Wolf::wolfList = nullptr;
+
 Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
 {
 	image_path = img_path;
@@ -115,4 +118,22 @@ void Milk::draw() const
 {
 	window* pWind = pGame->getWind();
 	pWind->DrawImage("images\\milk.jpg", RefPoint.x, RefPoint.y, width, height);
+}
+
+Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path) : Animal(r_pGame, { 0,0 }, r_width, r_height, img_path)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+	std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+
+	curr_pos.x = dist1(gen);
+	curr_pos.y = dist2(gen);
+	RefPoint = curr_pos;
+}
+
+void Wolf::moveStep()
+{
+	// add movement code for wolf here
 }

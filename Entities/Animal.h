@@ -40,3 +40,12 @@ public:
 	Milk(Game* r_pGame, point r_point, int r_width, int r_height);
 	virtual void draw() const override;
 };
+
+class Wolf : public Animal
+{
+public:
+	Wolf(Game* r_pGame, int r_width, int r_height, string img_path);
+	virtual void moveStep();
+	static int count;
+	static Wolf** wolfList;
+};

@@ -47,6 +47,8 @@ public:
 
 	void clearPlayingArea()const;
 
+	void spawnWolf() const;
+
 	void go() const;
 
 	window* getWind() const;		//returns a pointer to the graphics window

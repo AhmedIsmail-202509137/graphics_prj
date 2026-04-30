@@ -28,6 +28,14 @@ Game::Game()
 
 	//7- Create and clear the status bar
 	clearStatusBar();
+	if (Wolf::wolfList == nullptr) {
+		Wolf::wolfList = new Wolf * [20];
+		for (int i = 0; i < 20; i++)
+		{
+			Wolf::wolfList[i] = nullptr;
+		}
+	}
+
 }
 
 Game::~Game()
@@ -185,6 +193,18 @@ void Game::drawStatusText() const
 	pWind->DrawString(760, config.windHeight - 35, "Animals: " + to_string(animalCount));
 }
 
+void Game::spawnWolf() const
+{
+	static int spwanedAtTime = -1;
+	if ((int)timerValue % (8 - level) == 0 && timerValue != spwanedAtTime)
+	{
+		Wolf::wolfList[Wolf::count] = new Wolf(const_cast<Game*>(this), 50, 50, "images\\wolf.jpg");
+		Wolf::count++;
+		spwanedAtTime = timerValue;
+	}
+}
+
+
 // feature 11
 void Game::intialTimer() const
 {
@@ -263,6 +283,13 @@ void Game::go() const
 		{
 			CowIcon::cowList[i]->moveStep();
 			CowIcon::cowList[i]->draw();
+		}
+
+		spawnWolf();
+		for (int i = 0; i < Wolf::count; i++)
+		{
+			Wolf::wolfList[i]->moveStep();
+			Wolf::wolfList[i]->draw();
 		}
 
 		pWind->UpdateBuffer();
