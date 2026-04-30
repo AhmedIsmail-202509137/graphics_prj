@@ -29,6 +29,7 @@ public:
 	window* CreateWind(int, int, int, int) const; //creates the game window
 	void createToolbar();
 	void createBudgetbar();
+	void drawWolf() const;
 	void clearBudget() const;
 	void printBudget(string msg) const;
 	void clearStatusBar() const;	//Clears the status bar

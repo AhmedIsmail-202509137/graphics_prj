@@ -92,7 +92,23 @@ void Game::createBudgetbar()
 	gameBudgetbar = new Budgetbar(this, budgetbarUpperleft, 0, config.toolBarHeight);
 	gameBudgetbar->draw();
 }
+//Ahmed Ismail Feature 6
+void Game::drawWolf() const
+{
+	pWind->SetPen(DARKGRAY, 1);
+	pWind->SetBrush(DARKGRAY);
+	pWind->DrawEllipse(790, 255, 850, 285, FILLED);
 
+	pWind->SetBrush(GRAY);
+	pWind->DrawCircle(854, 259, 14, FILLED);
+
+	pWind->DrawTriangle(844, 247, 849, 232, 854, 249, FILLED);
+	pWind->DrawTriangle(854, 249, 860, 232, 865, 247, FILLED);
+
+	pWind->SetPen(BLACK, 1);
+	pWind->SetBrush(BLACK);
+	pWind->DrawCircle(859, 255, 2, FILLED);
+}
 
 void Game::clearBudget() const
 {
