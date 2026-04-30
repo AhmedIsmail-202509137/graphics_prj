@@ -96,6 +96,17 @@ void ChickIcon::onClick()
 		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 	}
 }
+void ChickIcon::updateChicks()
+{
+	for (int i = 0; i < count; i++)
+	{
+		chickList[i]->updateCounter();
+		chickList[i]->draw();
+		chickList[i]->drawProduct();
+		chickList[i]->drawCounter();
+	}
+}
+
 
 
 void CowIcon::onClick()
@@ -144,6 +155,17 @@ void CowIcon::onClick()
 		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 	}
 }
+void CowIcon::updateCows()
+{
+	for (int i = 0; i < count; i++)
+	{
+		cowList[i]->updateCounter();
+		cowList[i]->draw();
+		cowList[i]->drawProduct();
+		cowList[i]->drawCounter();
+	}
+}
+
 
 void WaterIcon::onClick()
 {
@@ -219,6 +241,12 @@ void Budgetbar::draw() const
 	pWind->SetPen(BLACK, 3);
 	pWind->DrawLine(0, 2*config.toolBarHeight, pWind->GetWidth(), 2*config.toolBarHeight);
 }
+void Budgetbar::updateAnimals()
+{
+	((ChickIcon*)iconsList[ICON_CHICK])->updateChicks();
+	((CowIcon*)iconsList[ICON_COW])->updateCows();
+}
+
 
 bool Budgetbar::handleClick(int x, int y)
 {

@@ -30,6 +30,7 @@ public:
 	static int count;
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
+	void updateChicks();
 };
 
 class CowIcon : public BudgetbarIcon
@@ -39,6 +40,8 @@ public:
 	static int count;
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
+	void updateCows();
+
 };
 
 class WaterIcon : public BudgetbarIcon
@@ -79,6 +82,8 @@ public:
 	~Budgetbar();
 	void draw() const override;
 	bool handleClick(int x, int y);	//handles clicks on toolbar icons, returns true if exit is clicked
+	void updateAnimals();
+
 
 };
 

@@ -1,5 +1,7 @@
 #include "Game.h"
 #include "../Config/GameConfig.h"
+#include "../CMUgraphicsLib/auxil.h"
+
 
 Game::Game()
 {
@@ -44,9 +46,9 @@ Game::~Game()
 
 clicktype Game::getMouseClick(int& x, int& y) const
 {
-	return pWind->WaitMouseClick(x, y);	//Wait for mouse click
-
+	return pWind->GetMouseClick(x, y);
 }
+
 
 string Game::getSrting() const
 {
@@ -153,6 +155,13 @@ void Game::clearStatusBar() const
 	pWind->SetBrush(config.statusBarColor);
 	pWind->DrawRectangle(0, config.windHeight - config.statusBarHeight, config.windWidth, config.windHeight);
 }
+void Game::clearPlayingArea() const
+{
+	pWind->SetPen(config.bkGrndColor, 1);
+	pWind->SetBrush(config.bkGrndColor);
+	pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
+}
+
 void Game::updatestatusbar() const
 {
 	clearStatusBar();
@@ -230,14 +239,6 @@ void Game::updateTime() const
 	}
 }
 
-// to remove after images when animals are moving
-void Game::clearPlayingArea() const
-{
-	pWind->SetPen(config.bkGrndColor, 1);
-	pWind->SetBrush(config.bkGrndColor);
-	pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
-}
-
 window* Game::getWind() const
 {
 	return pWind;
@@ -268,6 +269,13 @@ void Game::go() const
 		printBudget(budget_string);
 		drawfieldboundary();
 		warehouse();
+		clearPlayingArea();
+		gameBudgetbar->updateAnimals();
+		Pause(100);
+
+		if (getMouseClick(x, y) == NO_CLICK)
+			continue;
+
 		for (int i = 0; i < WaterIcon::count; i++)
 		{
 			drawFoodAreaAt(WaterIcon::waterList[i]);

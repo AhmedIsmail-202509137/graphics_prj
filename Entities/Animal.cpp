@@ -7,14 +7,19 @@ using namespace std;
 int Wolf::count = 0;
 Wolf** Wolf::wolfList = nullptr;
 
-Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
+Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path, int r_maxCounter, string r_productImage) : Drawable(r_pGame, r_point, r_width, r_height)
 {
 	image_path = img_path;
 	curr_pos = r_point;
 	curr_vel.x = 1;
 	curr_vel.y = 1;
-
+	counter = 0;
+	maxCounter = r_maxCounter;
+	lastTime = time(0);
+	productReady = false;
+	productImage = r_productImage;
 }
+
 
 void Animal::draw() const
 {
@@ -23,7 +28,37 @@ void Animal::draw() const
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 }
 
-Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
+// Abdelaziz feature 19
+void Animal::updateCounter()
+{
+	time_t now = time(0);
+	int seconds = (int)difftime(now, lastTime);
+
+	if (seconds > 0)
+	{
+		counter = counter + seconds;
+		lastTime = now;
+	}
+
+	if (counter >= maxCounter)
+	{
+		counter = 0;
+		productReady = true;
+		lastTime = now;
+	}
+}
+
+void Animal::drawProduct() const
+{
+	if (productReady == true)
+	{
+		window* pWind = pGame->getWind();
+		pWind->DrawImage(productImage, RefPoint.x + 10, RefPoint.y + height + 5, 30, 30);
+	}
+}
+
+
+Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path, 10, "images\\egg.jpg")
 {}
 
 void Chick::moveStep()
@@ -61,7 +96,7 @@ void Chick::moveStep()
 	RefPoint = curr_pos;
 }
 
-Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
+Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path, 20, "images\\milk.jpg")
 {}
 
 void Cow::moveStep()
@@ -120,7 +155,7 @@ void Milk::draw() const
 	pWind->DrawImage("images\\milk.jpg", RefPoint.x, RefPoint.y, width, height);
 }
 
-Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path) : Animal(r_pGame, { 0,0 }, r_width, r_height, img_path)
+Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path) : Animal(r_pGame, { 0,0 }, r_width, r_height, img_path, 0, "")
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -136,4 +171,72 @@ Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path) : Animal(r
 void Wolf::moveStep()
 {
 	// add movement code for wolf here
+}
+
+// Feature 21 Abdelaziz 
+
+void Animal::drawCounter() const
+{
+	if (maxCounter <= 0)
+		return;
+
+	window* pWind = pGame->getWind();
+	int remainingTime = maxCounter - counter;
+
+	if (remainingTime < 0)
+		remainingTime = 0;
+
+	pWind->SetPen(BLACK, 1);
+	pWind->SetBrush(WHITE);
+	pWind->DrawRectangle(RefPoint.x + 10, RefPoint.y + height + 2,
+		RefPoint.x + 38, RefPoint.y + height + 22);
+	pWind->SetFont(16, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RefPoint.x + 15, RefPoint.y + height + 4,
+		to_string(remainingTime));
+}
+
+void Chick::drawCounter() const
+{
+	if (maxCounter <= 0)
+		return;
+
+	window* pWind = pGame->getWind();
+	int remainingTime = maxCounter - counter;
+
+	if (remainingTime < 0)
+		remainingTime = 0;
+
+	int counterLeft = RefPoint.x + 11;
+	int counterTop = RefPoint.y + height + 3;
+
+	pWind->SetPen(BLACK, 1);
+	pWind->SetBrush(WHITE);
+	pWind->DrawRectangle(counterLeft, counterTop,
+		counterLeft + 28, counterTop + 20);
+	pWind->SetFont(16, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(counterLeft + 5, counterTop + 2,
+		to_string(remainingTime));
+}
+
+void Cow::drawCounter() const
+{
+	if (maxCounter <= 0)
+		return;
+
+	window* pWind = pGame->getWind();
+	int remainingTime = maxCounter - counter;
+
+	if (remainingTime < 0)
+		remainingTime = 0;
+
+	int counterLeft = RefPoint.x + (width / 2) - 14;
+	int counterTop = RefPoint.y + height - 20;
+
+	pWind->SetPen(BLACK, 1);
+	pWind->SetBrush(WHITE);
+	pWind->DrawRectangle(counterLeft, counterTop,
+		counterLeft + 28, counterTop + 18);
+	pWind->SetFont(15, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(counterLeft + 5, counterTop + 1,
+		to_string(remainingTime));
 }

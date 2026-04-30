@@ -1,5 +1,7 @@
 #pragma once
 #include "../Core/Drawable.h"
+#include <ctime>
+
 
 class Animal :public Drawable
 {
@@ -8,9 +10,24 @@ private:
 public:
 	point curr_pos;
 	point curr_vel;
-	Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path,int r_maxCounter, string r_productImage);
 	virtual void draw() const override;
 	virtual void moveStep() = 0;   //The action that should be taken each time step
+
+	int counter;
+	int maxCounter;
+	time_t lastTime;
+	bool productReady;
+	string productImage;
+	void updateCounter();
+	void drawProduct() const;
+
+	void updateCounter();
+	virtual void drawCounter() const;
+	void drawProduct() const;
+
+
+
 };
 
 class Chick : public Animal
@@ -18,6 +35,7 @@ class Chick : public Animal
 public:
 	Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void moveStep();
+	virtual void drawCounter() const override;
 };
 
 class Cow : public Animal
@@ -25,6 +43,7 @@ class Cow : public Animal
 public:
 	Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void moveStep();
+	virtual void drawCounter() const override;
 };
 
 class Egg :public Drawable
