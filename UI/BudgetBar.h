@@ -44,15 +44,19 @@ public:
 
 };
 
+
+//magdy
 class WaterIcon : public BudgetbarIcon
 {
 public:
 	static point waterList[15];
+	static int waterCounters[15];
+	static bool waterActive[15];
 	static int count;
 	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
-};
-
+	void updateWater();  
+}; 
 
 // TO DO: The rest of icons in the toolbar
 
@@ -73,7 +77,7 @@ enum ANIMAL_ICONS //The icons of the toolbar (you should add more icons)
 
 class Budgetbar : public Drawable
 {
-private:
+public:
 	BudgetbarIcon** iconsList; //an array of toolbarIcon pointers
 	string iconsImages[ANIMAL_COUNT];
 

@@ -194,9 +194,36 @@ void WaterIcon::onClick()
 		count++;
 	}
 }
+//magdy
 
+void WaterIcon::updateWater()
+{
+    static time_t lastTime = time(0);
+    time_t now = time(0);
+    bool tick = difftime(now, lastTime) >= 1.0;
+    if (tick) lastTime = now;
 
-
+    for (int i = 0; i < count; i++)
+    {
+        if (!waterActive[i]) continue;
+        if (tick)
+        {
+            waterCounters[i]--;
+            if (waterCounters[i] <= 0) { waterActive[i] = false; continue; }
+        }
+        pGame->drawFoodAreaAt(waterList[i]);
+        window* pWind = pGame->getWind();
+        pWind->SetPen(BLACK, 1);
+        pWind->SetBrush(WHITE);
+        pWind->DrawRectangle(waterList[i].x + 5, waterList[i].y - 25,
+                             waterList[i].x + 35, waterList[i].y - 5);
+        pWind->SetFont(16, BOLD, BY_NAME, "Arial");
+        pWind->DrawString(waterList[i].x + 10, waterList[i].y - 23,
+                          to_string(waterCounters[i]));
+    }
+}
+int WaterIcon::waterCounters[15]{};
+bool WaterIcon::waterActive[15]{};
 
 
 Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : Drawable(r_pGame, r_point, r_width, r_height)
