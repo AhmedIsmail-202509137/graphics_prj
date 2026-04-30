@@ -26,8 +26,8 @@ public:
 class ChickIcon : public BudgetbarIcon
 {
 public:
-	Chick** chickList; //an array of Chick pointers
-	int count = 0;
+	static Chick** chickList; //an array of Chick pointers
+	static int count;
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
 };
@@ -35,8 +35,8 @@ public:
 class CowIcon : public BudgetbarIcon
 {
 public:
-	Cow** cowList; //an array of Chick pointers
-	int count = 0;
+	static Cow** cowList; //an array of Cow pointers
+	static int count;
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
 };

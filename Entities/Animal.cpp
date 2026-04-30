@@ -25,13 +25,37 @@ Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img
 
 void Chick::moveStep()
 {
-	//TO DO: add code for cleanup and game exit here
-	/*
-	//draw image of this object in the field
-	window* pWind = pGame->getWind();
-	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
-	*/
-	cout << "Icon Chick Clicked" << endl;
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dist(-3, 3);
+
+	bool hitWall = false;
+
+	// Left/Right boundaries
+	if (curr_pos.x + curr_vel.x <= range_min_x || curr_pos.x + curr_vel.x >= range_max_x) {
+		curr_pos.x -= curr_vel.x;
+		curr_vel.x = -curr_vel.x;
+		hitWall = true;
+	}
+
+	// Top/Bottom boundaries
+	if (curr_pos.y + curr_vel.y <= range_min_y || curr_pos.y + curr_vel.y >= range_max_y) {
+		curr_pos.y -= curr_vel.y;
+		curr_vel.y = -curr_vel.y; 
+		hitWall = true;
+	}
+
+	// Percentage of randomly changing a direction is currently 1% (also changes direction if hitting a wall
+	std::uniform_int_distribution<int> chance(1, 100);
+	if (chance(gen) <= 1 || hitWall) {
+		curr_vel.x = dist(gen);
+		curr_vel.y = dist(gen);
+	}
+
+	// Update Position
+	curr_pos.x += curr_vel.x;
+	curr_pos.y += curr_vel.y;
+	RefPoint = curr_pos;
 }
 
 Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
@@ -39,9 +63,37 @@ Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_pat
 
 void Cow::moveStep()
 {
-	//TO DO: add code for cleanup and game exit here
-	cout << "Icon Cow Clicked" << endl;
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dist(-3, 3);
 
+	bool hitWall = false;
+
+	// Left/Right boundaries
+	if (curr_pos.x + curr_vel.x <= range_min_x || curr_pos.x + curr_vel.x >= range_max_x) {
+		curr_pos.x -= curr_vel.x;
+		curr_vel.x = -curr_vel.x;
+		hitWall = true;
+	}
+
+	// Top/Bottom boundaries
+	if (curr_pos.y + curr_vel.y <= range_min_y || curr_pos.y + curr_vel.y >= range_max_y) {
+		curr_pos.y -= curr_vel.y;
+		curr_vel.y = -curr_vel.y;
+		hitWall = true;
+	}
+
+	// Percentage of randomly changing a direction is currently 1% (also changes direction if hitting a wall
+	std::uniform_int_distribution<int> chance(1, 100);
+	if (chance(gen) <= 1 || hitWall) {
+		curr_vel.x = dist(gen);
+		curr_vel.y = dist(gen);
+	}
+
+	// Update Position
+	curr_pos.x += curr_vel.x;
+	curr_pos.y += curr_vel.y;
+	RefPoint = curr_pos;
 }
 
 // Abdelaziz feature 7

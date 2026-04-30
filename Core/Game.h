@@ -16,7 +16,7 @@ public:
 	int budget = 2000;
 	mutable int timerValue = 60;
 	int goal = 5000;
-	mutable int level = 0;
+	mutable int level = 1;
 	int animalCount = 0;
 
 	Game();
@@ -41,6 +41,8 @@ public:
 
 	void intialTimer() const;
 	void updateTime() const;
+
+	void clearPlayingArea()const;
 
 	void go() const;
 

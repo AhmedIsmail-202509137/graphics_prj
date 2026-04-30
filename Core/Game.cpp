@@ -184,6 +184,14 @@ void Game::updateTime() const
 	}
 }
 
+// to remove after images when animals are moving
+void Game::clearPlayingArea() const
+{
+	pWind->SetPen(config.bkGrndColor, 1);
+	pWind->SetBrush(config.bkGrndColor);
+	pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
+}
+
 window* Game::getWind() const
 {
 	return pWind;
@@ -193,21 +201,41 @@ void Game::go() const
 	// This function reads the position where the user clicks to determine the desired operation
 	int x, y;
 	bool isExit = false;
-
+	pWind->SetBuffering(true);
 	// Change the title
 	pWind->ChangeTitle("- - - - - - - - - - Farm Frenzy (CIE101-project) - - - - - - - - - -");
 
 	do
 	{
 		updateTime();
-		drawStatusText();
+		
+		clearPlayingArea();
+		clearBudget();
+		clearStatusBar();
+		
 
+		drawStatusText();
+		gameToolbar->draw();
+		gameBudgetbar->draw();
 		string budget_string = "BUDGET = $" + to_string(budget) + " | Chick: $100 | Cow : $200 | water : $50";
 
 		printBudget(budget_string);
 		drawfieldboundary();
 		warehouse();
 
+		for (int i = 0; i < ChickIcon::count; i++) 
+		{
+			ChickIcon::chickList[i]->moveStep();
+			ChickIcon::chickList[i]->draw();
+		}
+
+		for (int i = 0; i < CowIcon::count; i++)
+		{
+			CowIcon::cowList[i]->moveStep();
+			CowIcon::cowList[i]->draw();
+		}
+
+		pWind->UpdateBuffer();
 		if (pWind->GetMouseClick(x, y))
 		{
 			if (y >= 0 && y < config.toolBarHeight)
