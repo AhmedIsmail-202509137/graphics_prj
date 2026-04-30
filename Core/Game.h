@@ -13,10 +13,10 @@ private:
 	mutable time_t lastRealTime;
 
 public:
-	int budget = 2000;
+	int budget = 3000;
 	mutable int timerValue = 60;
 	int goal = 5000;
-	mutable int level = 1;
+	mutable int level = 0;
 	int animalCount = 0;
 
 	Game();

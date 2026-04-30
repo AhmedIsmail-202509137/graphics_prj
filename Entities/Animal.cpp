@@ -167,11 +167,25 @@ Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path) : Animal(r
 	curr_pos.y = dist2(gen);
 	RefPoint = curr_pos;
 }
+	void Wolf::moveStep()
+	{ //magdy m
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<int> dist(-10, 10);
 
-void Wolf::moveStep()
-{
-	// add movement code for wolf here
-}
+		curr_pos.x += dist(gen);
+		curr_pos.y += dist(gen);
+
+		if (curr_pos.x < range_min_x) curr_pos.x = range_min_x;
+		if (curr_pos.x > range_max_x) curr_pos.x = range_max_x;
+		if (curr_pos.y < range_min_y) curr_pos.y = range_min_y;
+		if (curr_pos.y > range_max_y) curr_pos.y = range_max_y;
+
+		RefPoint = curr_pos; 
+	}
+
+
+
 
 // Feature 21 Abdelaziz 
 

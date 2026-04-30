@@ -205,7 +205,7 @@ void Game::drawStatusText() const
 void Game::spawnWolf() const
 {
 	static int spwanedAtTime = -1;
-	if ((int)timerValue % (8 - level) == 0 && timerValue != spwanedAtTime)
+	if ((int)timerValue % (21 - level) == 0 && timerValue != spwanedAtTime)
 	{
 		Wolf::wolfList[Wolf::count] = new Wolf(const_cast<Game*>(this), 50, 50, "images\\wolf.jpg");
 		Wolf::count++;
