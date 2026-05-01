@@ -19,6 +19,7 @@ public:
 	time_t lastTime;
 	bool productReady;
 	string productImage;
+	point productPoint;
 	void updateCounter();
 	void drawProduct() const;
 

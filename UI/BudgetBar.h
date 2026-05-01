@@ -31,6 +31,7 @@ public:
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
 	void updateChicks();
+	void drawCount() const;
 };
 
 class CowIcon : public BudgetbarIcon
@@ -41,6 +42,7 @@ public:
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
 	void updateCows();
+	void drawCount() const;
 
 };
 

@@ -101,10 +101,24 @@ void ChickIcon::updateChicks()
 	for (int i = 0; i < count; i++)
 	{
 		chickList[i]->updateCounter();
-		chickList[i]->draw();
-		chickList[i]->drawProduct();
-		chickList[i]->drawCounter();
 	}
+}
+
+void ChickIcon::drawCount() const
+{
+	if (count <= 0)
+		return;
+
+	window* pWind = pGame->getWind();
+	int counterLeft = RefPoint.x + width - 18;
+	int counterTop = RefPoint.y + 4;
+
+	pWind->SetPen(RED, 2);
+	pWind->SetBrush(WHITE);
+	pWind->DrawRectangle(counterLeft, counterTop, counterLeft + 24, counterTop + 22);
+	pWind->SetFont(16, BOLD, BY_NAME, "Arial");
+	pWind->SetPen(BLACK, 1);
+	pWind->DrawString(counterLeft + 6, counterTop + 3, to_string(count));
 }
 
 
@@ -160,10 +174,24 @@ void CowIcon::updateCows()
 	for (int i = 0; i < count; i++)
 	{
 		cowList[i]->updateCounter();
-		cowList[i]->draw();
-		cowList[i]->drawProduct();
-		cowList[i]->drawCounter();
 	}
+}
+
+void CowIcon::drawCount() const
+{
+	if (count <= 0)
+		return;
+
+	window* pWind = pGame->getWind();
+	int counterLeft = RefPoint.x + width - 18;
+	int counterTop = RefPoint.y + 4;
+
+	pWind->SetPen(RED, 2);
+	pWind->SetBrush(WHITE);
+	pWind->DrawRectangle(counterLeft, counterTop, counterLeft + 24, counterTop + 22);
+	pWind->SetFont(16, BOLD, BY_NAME, "Arial");
+	pWind->SetPen(BLACK, 1);
+	pWind->DrawString(counterLeft + 6, counterTop + 3, to_string(count));
 }
 
 
@@ -264,6 +292,8 @@ void Budgetbar::draw() const
 {
 	for (int i = 0; i < ANIMAL_COUNT; i++)
 		iconsList[i]->draw();
+	((ChickIcon*)iconsList[ICON_CHICK])->drawCount();
+	((CowIcon*)iconsList[ICON_COW])->drawCount();
 	window* pWind = pGame->getWind();
 	pWind->SetPen(BLACK, 3);
 	pWind->DrawLine(0, 2*config.toolBarHeight, pWind->GetWidth(), 2*config.toolBarHeight);

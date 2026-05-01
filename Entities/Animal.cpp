@@ -18,6 +18,7 @@ Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string i
 	lastTime = time(0);
 	productReady = false;
 	productImage = r_productImage;
+	productPoint = r_point;
 }
 
 
@@ -43,6 +44,8 @@ void Animal::updateCounter()
 	if (counter >= maxCounter)
 	{
 		counter = 0;
+		productPoint.x = RefPoint.x + 10;
+		productPoint.y = RefPoint.y + height + 5;
 		productReady = true;
 		lastTime = now;
 	}
@@ -53,7 +56,7 @@ void Animal::drawProduct() const
 	if (productReady == true)
 	{
 		window* pWind = pGame->getWind();
-		pWind->DrawImage(productImage, RefPoint.x + 10, RefPoint.y + height + 5, 30, 30);
+		pWind->DrawImage(productImage, productPoint.x, productPoint.y, 30, 30);
 	}
 }
 

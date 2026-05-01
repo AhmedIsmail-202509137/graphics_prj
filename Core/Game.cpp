@@ -284,12 +284,16 @@ void Game::go() const
 		{
 			ChickIcon::chickList[i]->moveStep();
 			ChickIcon::chickList[i]->draw();
+			ChickIcon::chickList[i]->drawProduct();
+			ChickIcon::chickList[i]->drawCounter();
 		}
 
 		for (int i = 0; i < CowIcon::count; i++)
 		{
 			CowIcon::cowList[i]->moveStep();
 			CowIcon::cowList[i]->draw();
+			CowIcon::cowList[i]->drawProduct();
+			CowIcon::cowList[i]->drawCounter();
 		}
 
 		spawnWolf();
