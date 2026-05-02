@@ -33,7 +33,7 @@ RestartIcon::RestartIcon(Game* r_pGame, point r_point, int r_width, int r_height
 
 void RestartIcon::onClick()
 {
-
+	pGame->restartGame(); // feature 27
 }
 
 ExitIcon::ExitIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : ToolbarIcon(r_pGame, r_point, r_width, r_height, img_path)
@@ -52,7 +52,7 @@ PauseIcon::PauseIcon(Game* r_pGame, point r_point, int r_width, int r_height, st
 
 void PauseIcon::onClick()
 {
-	//TO DO: add code for restarting the game here
+	pGame->pauseGame(); // feature 26
 }
 
 ResumeIcon::ResumeIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)
@@ -62,7 +62,7 @@ ResumeIcon::ResumeIcon(Game* r_pGame, point r_point, int r_width, int r_height, 
 
 void ResumeIcon::onClick()
 {
-	//TO DO: add code for restarting the game here
+	pGame->resumeGame(); // feature 26
 }
 
 SaveIcon::SaveIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)
@@ -148,6 +148,4 @@ bool Toolbar::handleClick(int x, int y)
 	if (clickedIconIndex == ICON_EXIT) return true;
 
 	return false;
-
 }
-

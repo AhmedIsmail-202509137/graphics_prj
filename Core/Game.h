@@ -11,6 +11,11 @@ private:
 	Toolbar* gameToolbar;
 	Budgetbar* gameBudgetbar;
 	mutable time_t lastRealTime;
+	// Features 26,27
+	bool isPaused = false; 
+	mutable int lastWolfSpawnTimerValue = -1; 
+	void syncTimersAfterResume(); 
+	void clearDynamicObjects(); 
 
 public:
 	int budget = 3000;
@@ -25,12 +30,13 @@ public:
 	clicktype getMouseClick(int& x, int& y) const; //Get coordinate where user clicks and returns click type (left/right)
 	string getSrting() const;	 //Returns a string entered by the user
 
-
 	window* CreateWind(int, int, int, int) const; //creates the game window
 	void createToolbar();
 	void createBudgetbar();
+	// Features 5, 6
 	void drawWolf() const;
 	void drawFoodArea() const;
+	// End of features 5,6
 	void drawFoodAreaAt(point topLeft) const;
 	void clearBudget() const;
 	void printBudget(string msg) const;
@@ -43,15 +49,16 @@ public:
 	void warehouse() const;
 	void clearPlayingArea() const;
 
-
 	void intialTimer() const;
 	void updateTime() const;
-
-
 	void spawnWolf() const;
+	// Features 26,27
+	void pauseGame(); 
+	void resumeGame();
+	void restartGame();
+	bool getPausedState() const;
 
 	void go() const;
 
 	window* getWind() const;		//returns a pointer to the graphics window
 };
-

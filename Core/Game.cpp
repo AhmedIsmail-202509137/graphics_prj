@@ -7,6 +7,8 @@ Game::Game()
 {
 	timerValue = 60;
 	lastRealTime = time(0);
+	isPaused = false;
+	lastWolfSpawnTimerValue = -1;
 	//1 - Create the main window
 	pWind = CreateWind(config.windWidth, config.windHeight, config.wx, config.wy);
 
@@ -200,16 +202,26 @@ void Game::drawStatusText() const
 	pWind->DrawString(260, config.windHeight - 35, "Goal: $" + to_string(goal));
 	pWind->DrawString(520, config.windHeight - 35, "Level: " + to_string(level));
 	pWind->DrawString(760, config.windHeight - 35, "Animals: " + to_string(animalCount));
+	//feature 26
+	if (isPaused)
+	{
+		pWind->DrawString(980, config.windHeight - 35, "PAUSED");
+	}
 }
 
 void Game::spawnWolf() const
 {
-	static int spwanedAtTime = -1;
-	if ((int)timerValue % (21 - level) == 0 && timerValue != spwanedAtTime)
+	int spawnInterval = 21 - level;
+	if (spawnInterval <= 0)
+	{
+		spawnInterval = 1;
+	}
+
+	if ((int)timerValue % spawnInterval == 0 && timerValue != lastWolfSpawnTimerValue && Wolf::count < 20)
 	{
 		Wolf::wolfList[Wolf::count] = new Wolf(const_cast<Game*>(this), 50, 50, "images\\wolf.jpg");
 		Wolf::count++;
-		spwanedAtTime = timerValue;
+		lastWolfSpawnTimerValue = timerValue;
 	}
 }
 
@@ -228,15 +240,122 @@ void Game::intialTimer() const
 // feature 12
 void Game::updateTime() const
 {
+	if (isPaused)
+	{
+		return; // feature 26
+	}
 
 	time_t currentRealTime = time(0);
 
 	if (currentRealTime != lastRealTime) {
 		double secondsPassed = difftime(currentRealTime, lastRealTime);
-		timerValue -= (float)secondsPassed;
+		timerValue -= (int)secondsPassed;
 		lastRealTime = currentRealTime;
 		intialTimer();
 	}
+}
+
+void Game::syncTimersAfterResume()
+{
+	time_t now = time(0);
+	lastRealTime = now; 
+
+	for (int i = 0; i < ChickIcon::count; i++)
+	{
+		if (ChickIcon::chickList[i] != nullptr)
+		{
+			ChickIcon::chickList[i]->lastTime = now; // feature 26
+		}
+	}
+
+	for (int i = 0; i < CowIcon::count; i++)
+	{
+		if (CowIcon::cowList[i] != nullptr)
+		{
+			CowIcon::cowList[i]->lastTime = now; // feature 26
+		}
+	}
+
+	for (int i = 0; i < Wolf::count; i++)
+	{
+		if (Wolf::wolfList[i] != nullptr)
+		{
+			Wolf::wolfList[i]->lastTime = now; // feature 26
+		}
+	}
+}
+
+void Game::clearDynamicObjects()//featuer 27
+{
+	for (int i = 0; i < ChickIcon::count; i++)
+	{
+		delete ChickIcon::chickList[i];
+		ChickIcon::chickList[i] = nullptr;
+	}
+	ChickIcon::count = 0;
+
+	for (int i = 0; i < CowIcon::count; i++)
+	{
+		delete CowIcon::cowList[i];
+		CowIcon::cowList[i] = nullptr; 
+	}
+	CowIcon::count = 0;
+
+	for (int i = 0; i < Wolf::count; i++)
+	{
+		delete Wolf::wolfList[i];
+		Wolf::wolfList[i] = nullptr; 
+	}
+	Wolf::count = 0; 
+
+	for (int i = 0; i < 15; i++)
+	{
+		WaterIcon::waterList[i].x = 0; 
+		WaterIcon::waterList[i].y = 0; 
+		WaterIcon::waterCounters[i] = 0; 
+		WaterIcon::waterActive[i] = false; 
+	}
+	WaterIcon::count = 0; 
+}
+
+void Game::pauseGame()//feature 26
+{
+	if (isPaused)
+	{
+		return; 
+	}
+	isPaused = true; 
+}
+
+void Game::resumeGame()//feature 26
+{
+	if (!isPaused)
+	{
+		return; 
+	}
+	syncTimersAfterResume(); 
+	isPaused = false; 
+}
+
+void Game::restartGame()// feature 27
+{
+	clearDynamicObjects(); 
+	budget = 3000; 
+	timerValue = 60; 
+	goal = 5000; 
+	level = 0; 
+	animalCount = 0; 
+	lastRealTime = time(0); 
+	lastWolfSpawnTimerValue = -1; 
+	isPaused = false; 
+	clearPlayingArea(); 
+	clearBudget(); 
+	clearStatusBar(); 
+}
+
+bool Game::getPausedState() const
+{
+	return isPaused; // feature 26
 }
 
 window* Game::getWind() const
@@ -250,7 +369,7 @@ void Game::go() const
 	bool isExit = false;
 	pWind->SetBuffering(true);
 	// Change the title
-	pWind->ChangeTitle("- - - - - - - - - - Farm Frenzy (CIE101-project) - - - - - - - - - -");
+	pWind->ChangeTitle("- - - - - - Farm Frenzy (CIE101-project/ Team 16) - - - - - -");
 
 	do
 	{
@@ -270,7 +389,10 @@ void Game::go() const
 
 
 		clearPlayingArea();
-		gameBudgetbar->updateAnimals();
+		if (!isPaused)
+		{
+			gameBudgetbar->updateAnimals(); // feature 26
+		}
 		Pause(100);
 		drawfieldboundary();
 		warehouse();
@@ -282,7 +404,14 @@ void Game::go() const
 
 		for (int i = 0; i < ChickIcon::count; i++) 
 		{
-			ChickIcon::chickList[i]->moveStep();
+			if (ChickIcon::chickList[i] == nullptr)
+			{
+				continue;
+			}
+			if (!isPaused)
+			{
+				ChickIcon::chickList[i]->moveStep(); // feature 26
+			}
 			ChickIcon::chickList[i]->draw();
 			ChickIcon::chickList[i]->drawProduct();
 			ChickIcon::chickList[i]->drawCounter();
@@ -290,20 +419,37 @@ void Game::go() const
 
 		for (int i = 0; i < CowIcon::count; i++)
 		{
-			CowIcon::cowList[i]->moveStep();
+			if (CowIcon::cowList[i] == nullptr)
+			{
+				continue;
+			}
+			if (!isPaused)
+			{
+				CowIcon::cowList[i]->moveStep(); // feature 26
+			}
 			CowIcon::cowList[i]->draw();
 			CowIcon::cowList[i]->drawProduct();
 			CowIcon::cowList[i]->drawCounter();
 		}
 
-		spawnWolf();
+		if (!isPaused)
+		{
+			spawnWolf(); // feature 26
+		}
 		for (int i = 0; i < Wolf::count; i++)
 		{
-			Wolf::wolfList[i]->moveStep();
+			if (Wolf::wolfList[i] == nullptr)
+			{
+				continue;
+			}
+			if (!isPaused)
+			{
+				Wolf::wolfList[i]->moveStep(); // feature 26
+			}
 			Wolf::wolfList[i]->draw();
 		}
 
-		pWind->UpdateBuffer();
+
 		if (pWind->GetMouseClick(x, y))
 		{
 			if (y >= 0 && y < config.toolBarHeight)
@@ -313,9 +459,13 @@ void Game::go() const
 			// [2] If user clicks on the Budgetbar (Second row)
 			else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight)
 			{
-				isExit = gameBudgetbar->handleClick(x, y);
+				if (!isPaused)
+				{
+					isExit = gameBudgetbar->handleClick(x, y); // feature 26
+				}
 			}
 		}
+		pWind->UpdateBuffer();
 		Sleep(30);
 		// Note: Add logic here for clicking the actual play area if needed!
 
