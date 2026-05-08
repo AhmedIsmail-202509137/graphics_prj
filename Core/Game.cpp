@@ -8,6 +8,7 @@ Game::Game()
 	timerValue = 60;
 	lastRealTime = time(0);
 	isPaused = false;
+	isGameOver = false;
 	lastWolfSpawnTimerValue = -1;
 	//1 - Create the main window
 	pWind = CreateWind(config.windWidth, config.windHeight, config.wx, config.wy);
@@ -198,6 +199,13 @@ void Game::drawStatusText() const
 
 	pWind->SetPen(WHITE, 1);
 	pWind->SetFont(20, BOLD, BY_NAME, "Arial");
+	if (isGameOver)
+	{
+		pWind->SetPen(RED, 1);
+		pWind->SetFont(28, BOLD, BY_NAME, "Arial");
+		pWind->DrawString(500, config.windHeight - 50, "Game Over");
+		return;
+	}
 	pWind->DrawString(20, config.windHeight - 35, "Timer: " + to_string(timerValue));
 	pWind->DrawString(260, config.windHeight - 35, "Goal: $" + to_string(goal));
 	pWind->DrawString(520, config.windHeight - 35, "Level: " + to_string(level));
@@ -251,6 +259,14 @@ void Game::updateTime() const
 		double secondsPassed = difftime(currentRealTime, lastRealTime);
 		timerValue -= (int)secondsPassed;
 		lastRealTime = currentRealTime;
+
+		if (timerValue <= 0)
+		{
+			timerValue = 0;
+			isGameOver = true;
+			return;
+		}
+
 		intialTimer();
 	}
 }
@@ -348,6 +364,7 @@ void Game::restartGame()// feature 27
 	lastRealTime = time(0); 
 	lastWolfSpawnTimerValue = -1; 
 	isPaused = false; 
+	isGameOver = false;
 	clearPlayingArea(); 
 	clearBudget(); 
 	clearStatusBar(); 

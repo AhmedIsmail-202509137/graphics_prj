@@ -13,6 +13,7 @@ private:
 	mutable time_t lastRealTime;
 	// Features 26,27
 	bool isPaused = false; 
+	mutable bool isGameOver = false;
 	mutable int lastWolfSpawnTimerValue = -1; 
 	void syncTimersAfterResume(); 
 	void clearDynamicObjects(); 
