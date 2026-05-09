@@ -62,13 +62,19 @@ void Animal::drawProduct() const
 
 
 Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path, 10, "images\\egg.jpg")
-{}
+{
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dist(-4, 4);
+	curr_vel.x = dist(gen);
+	curr_vel.y = dist(gen);
+}
 
 void Chick::moveStep()
 {
 	static std::random_device rd;
 	static std::mt19937 gen(rd());
-	std::uniform_int_distribution<int> dist(-3, 3);
+	std::uniform_int_distribution<int> dist(-4, 4);
 
 	bool hitWall = false;
 
@@ -76,19 +82,17 @@ void Chick::moveStep()
 	if (curr_pos.x + curr_vel.x <= range_min_x || curr_pos.x + curr_vel.x >= range_max_x) {
 		curr_pos.x -= curr_vel.x;
 		curr_vel.x = -curr_vel.x;
-		hitWall = true;
 	}
 
 	// Top/Bottom boundaries
 	if (curr_pos.y + curr_vel.y <= range_min_y || curr_pos.y + curr_vel.y >= range_max_y) {
 		curr_pos.y -= curr_vel.y;
 		curr_vel.y = -curr_vel.y; 
-		hitWall = true;
 	}
 
-	// Percentage of randomly changing a direction is currently 1% (also changes direction if hitting a wall
-	std::uniform_int_distribution<int> chance(1, 100);
-	if (chance(gen) <= 1 || hitWall) {
+	// Percentage of randomly changing a direction is currently 2%
+	std::uniform_int_distribution<int> chance(2, 100);
+	if (chance(gen) <= 2) {
 		curr_vel.x = dist(gen);
 		curr_vel.y = dist(gen);
 	}
@@ -100,7 +104,13 @@ void Chick::moveStep()
 }
 
 Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path, 20, "images\\milk.jpg")
-{}
+{
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dist(-3, 3);
+	curr_vel.x = dist(gen);
+	curr_vel.y = dist(gen);
+}
 
 void Cow::moveStep()
 {
@@ -114,19 +124,17 @@ void Cow::moveStep()
 	if (curr_pos.x + curr_vel.x <= range_min_x || curr_pos.x + curr_vel.x >= range_max_x) {
 		curr_pos.x -= curr_vel.x;
 		curr_vel.x = -curr_vel.x;
-		hitWall = true;
 	}
 
 	// Top/Bottom boundaries
 	if (curr_pos.y + curr_vel.y <= range_min_y || curr_pos.y + curr_vel.y >= range_max_y) {
 		curr_pos.y -= curr_vel.y;
 		curr_vel.y = -curr_vel.y;
-		hitWall = true;
 	}
 
-	// Percentage of randomly changing a direction is currently 1% (also changes direction if hitting a wall
-	std::uniform_int_distribution<int> chance(1, 100);
-	if (chance(gen) <= 1 || hitWall) {
+	// Percentage of randomly changing a direction is currently 2%
+	std::uniform_int_distribution<int> chance(2, 100);
+	if (chance(gen) <= 2) {
 		curr_vel.x = dist(gen);
 		curr_vel.y = dist(gen);
 	}
