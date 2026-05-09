@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../UI/Toolbar.h"
 #include "../Config/GameConfig.h"
 #include "../CMUgraphicsLib/auxil.h"
 
@@ -264,6 +265,7 @@ void Game::updateTime() const
 		{
 			timerValue = 0;
 			isGameOver = true;
+			const_cast<Game*>(this)->pauseGame();
 			return;
 		}
 
