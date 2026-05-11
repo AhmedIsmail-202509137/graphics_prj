@@ -72,7 +72,7 @@ SaveIcon::SaveIcon(Game* r_pGame, point r_point, int r_width, int r_height, stri
 
 void SaveIcon::onClick()
 {
-
+	pGame->saveGame(); // feature 28
 }
 
 LoadGameIcon::LoadGameIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)

@@ -2,6 +2,7 @@
 #include "../UI/Toolbar.h"
 #include "../Config/GameConfig.h"
 #include "../CMUgraphicsLib/auxil.h"
+#include <fstream> // feature 28
 
 
 Game::Game()
@@ -372,6 +373,92 @@ void Game::restartGame()// feature 27
 	clearStatusBar(); 
 }
 
+
+void Game::saveGame() // feature 28
+{ 
+	string saveFilePath = "D:\\Study\\ZC\\Spring 2026\\CIE 101 (C++ and OOP)\\CIE101_ProjectStartupCode\\savegame.txt"; 
+	std::ofstream saveFile(saveFilePath); 
+	saveFile << "LEVEL " << level << '\n';
+	saveFile << "BUDGET " << budget << '\n';
+	saveFile << "TIMER " << timerValue << '\n';
+	saveFile << "GOAL " << goal << '\n';
+	saveFile << "ANIMALCOUNT " << animalCount << '\n';
+	saveFile << "PAUSED " << isPaused << '\n';
+	saveFile << "GAMEOVER " << isGameOver << '\n';
+	saveFile << "LASTWOLFSPAWN " << lastWolfSpawnTimerValue << '\n';
+	saveFile << '\n';
+
+
+	//Animals
+	int savedAnimalsCount = 0;
+	for (int i = 0; i < ChickIcon::count; i++)
+	{
+		if (ChickIcon::chickList[i] != nullptr)
+		{savedAnimalsCount++;} 
+	}
+
+	for (int i = 0; i < CowIcon::count; i++)
+	{
+		if (CowIcon::cowList[i] != nullptr)
+		{savedAnimalsCount++;}
+	}
+
+	saveFile << "ANIMALS " << savedAnimalsCount << '\n';
+
+	for (int i = 0; i < ChickIcon::count; i++)
+	{if (ChickIcon::chickList[i] == nullptr)
+		{
+		continue;
+		} 
+		saveFile << "CHICK " << ChickIcon::chickList[i]->curr_pos.x << ' ' << ChickIcon::chickList[i]->curr_pos.y << ' ' << ChickIcon::chickList[i]->counter << ' ' << ChickIcon::chickList[i]->productReady << ' ' << ChickIcon::chickList[i]->curr_vel.x << ' ' << ChickIcon::chickList[i]->curr_vel.y << ' ' << ChickIcon::chickList[i]->productPoint.x << ' ' << ChickIcon::chickList[i]->productPoint.y << '\n'; 
+	}
+
+	for (int i = 0; i < CowIcon::count; i++) 
+	{ 
+		if (CowIcon::cowList[i] == nullptr) 
+		{ 
+			continue; 
+		} 
+		saveFile << "COW " << CowIcon::cowList[i]->curr_pos.x << ' ' << CowIcon::cowList[i]->curr_pos.y << ' ' << CowIcon::cowList[i]->counter << ' ' << CowIcon::cowList[i]->productReady << ' ' << CowIcon::cowList[i]->curr_vel.x << ' ' << CowIcon::cowList[i]->curr_vel.y << ' ' << CowIcon::cowList[i]->productPoint.x << ' ' << CowIcon::cowList[i]->productPoint.y << '\n'; 
+	}
+	saveFile << '\n'; 
+
+
+	//wolves
+	int savedWolvesCount = 0;
+	for (int i = 0; i < Wolf::count; i++)
+	{
+		if (Wolf::wolfList[i] != nullptr) 
+		{
+			savedWolvesCount++;
+		}
+	}
+
+	saveFile << "WOLVES " << savedWolvesCount << '\n';
+	for (int i = 0; i < Wolf::count; i++) 
+	{ 
+		if (Wolf::wolfList[i] == nullptr)
+		{ 
+			continue; 
+		} 
+		saveFile << "WOLF " << Wolf::wolfList[i]->curr_pos.x << ' ' << Wolf::wolfList[i]->curr_pos.y << '\n'; 
+	}
+	saveFile << '\n';
+	
+
+
+	//food areas
+	saveFile << "FOODAREAS " << WaterIcon::count << '\n';
+	for (int i = 0; i < WaterIcon::count; i++)
+	{ 
+		saveFile << "FOOD " << WaterIcon::waterList[i].x << ' ' << WaterIcon::waterList[i].y << ' ' << WaterIcon::waterCounters[i] << ' ' << WaterIcon::waterActive[i] << '\n';
+	}
+
+	saveFile.close();
+	printMessage("Game saved to savegame.txt");
+}
+
+
 bool Game::getPausedState() const
 {
 	return isPaused; // feature 26
@@ -490,5 +577,6 @@ void Game::go() const
 
 	} while (!isExit);
 }
+
 
 

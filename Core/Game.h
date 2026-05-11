@@ -57,9 +57,11 @@ public:
 	void pauseGame(); 
 	void resumeGame();
 	void restartGame();
+	void saveGame();
 	bool getPausedState() const;
 
 	void go() const;
 
 	window* getWind() const;		//returns a pointer to the graphics window
 };
+
