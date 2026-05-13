@@ -17,12 +17,7 @@ private:
 	mutable int lastWolfSpawnTimerValue = -1; 
 	void syncTimersAfterResume(); 
 	void clearDynamicObjects(); 
-	bool warehouseOpened = false; 
-	int warehouseEggs = 0;        
-	int warehouseMilk = 0;
-	void drawWarehouseWindow() const; 
-	void handleWarehouseClick(int x, int y);
-	
+
 public:
 	int budget = 3000;
 	mutable int timerValue = 60;

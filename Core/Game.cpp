@@ -3,8 +3,6 @@
 #include "../Config/GameConfig.h"
 #include "../CMUgraphicsLib/auxil.h"
 #include <fstream> // feature 28
-#include <iostream>
-using namespace std;
 
 
 Game::Game()
@@ -16,7 +14,7 @@ Game::Game()
 	lastWolfSpawnTimerValue = -1;
 	//1 - Create the main window
 	pWind = CreateWind(config.windWidth, config.windHeight, config.wx, config.wy);
-	pWind->SetBuffering(true);
+
 	//2 - create and draw the toolbar
 	createToolbar();
 	createBudgetbar();
@@ -195,57 +193,6 @@ void Game::warehouse() const    // Draw the warehouse in the upper right corner 
 	window* pWind = getWind();
 	pWind->DrawImage("images\\warehouse.jpg", 550, 100, 110, 110);
 
-}
-void Game::drawWarehouseWindow() const
-{
-	if (!warehouseOpened) return;
-
-	// 1. Draw Background Overlay (the popup box)
-	pWind->SetBrush(WHITE);
-	pWind->SetPen(BLACK, 2);
-	pWind->DrawRectangle(300, 150, 900, 550);
-
-	pWind->SetFont(30, BOLD, BY_NAME, "Arial");
-	pWind->DrawString(450, 180, "WAREHOUSE");
-	
-	pWind->SetFont(22, BOLD, BY_NAME, "Arial");
-	pWind->SetPen(BLACK);
-	pWind->DrawString(380, 300, "Eggs: " + to_string(warehouseEggs));
-	pWind->DrawString(380, 380, "Milk: " + to_string(warehouseMilk));
-
-	pWind->SetBrush(LIGHTGRAY);
-	pWind->DrawRectangle(650, 280, 750, 320); // Sell Egg Box
-	pWind->DrawRectangle(650, 360, 750, 400); // Sell Milk Box
-
-	pWind->SetPen(BLACK);
-	pWind->DrawString(670, 290, "SELL");
-	pWind->DrawString(670, 370, "SELL");
-
-	pWind->SetBrush(RED);
-	pWind->DrawRectangle(860, 160, 890, 190);
-	pWind->SetPen(WHITE);
-	pWind->DrawString(867, 162, "X");
-}
-
-void Game::handleWarehouseClick(int x, int y)
-{
-	// Close Button logic
-	if (x >= 860 && x <= 890 && y >= 160 && y <= 190)
-	{
-		warehouseOpened = false;
-	}
-	// Sell Eggs (Price: $20)
-	else if (x >= 650 && x <= 750 && y >= 280 && y <= 320)
-	{
-		budget += warehouseEggs * 20;
-		warehouseEggs = 0;
-	}
-	// Sell Milk (Price: $50)
-	else if (x >= 650 && x <= 750 && y >= 360 && y <= 400)
-	{
-		budget += warehouseMilk * 50;
-		warehouseMilk = 0;
-	}
 }
 // Abdelaziz feature 1
 void Game::drawStatusText() const
@@ -530,27 +477,30 @@ void Game::go() const
 	// Change the title
 	pWind->ChangeTitle("- - - - - - Farm Frenzy (CIE101-project/ Team 16) - - - - - -");
 
-	
 	do
 	{
-		clearPlayingArea();
-		clearBudget();
 		updateTime();
 		
+		clearPlayingArea();
+		clearBudget();
 		clearStatusBar();
+		
+
 		drawStatusText();
 		gameToolbar->draw();
 		gameBudgetbar->draw();
-
 		string budget_string = "BUDGET = $" + to_string(budget) + " | Chick: $100 | Cow : $200 | water : $50";
+
 		printBudget(budget_string);
+
+
+		clearPlayingArea();
 		if (!isPaused)
 		{
 			gameBudgetbar->updateAnimals(); // feature 26
 		}
 		Pause(100);
-		//drawfieldboundary();
-
+		drawfieldboundary();
 		warehouse();
 
 		for (int i = 0; i < WaterIcon::count; i++)
@@ -605,29 +555,25 @@ void Game::go() const
 			Wolf::wolfList[i]->draw();
 		}
 
+
 		if (pWind->GetMouseClick(x, y))
 		{
-			if (warehouseOpened)
-			{
-				const_cast<Game*>(this)->handleWarehouseClick(x, y);
-			}
-			else if (y >= 0 && y < config.toolBarHeight)
+			if (y >= 0 && y < config.toolBarHeight)
 			{
 				isExit = gameToolbar->handleClick(x, y);
 			}
+			// [2] If user clicks on the Budgetbar (Second row)
 			else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight)
 			{
 				if (!isPaused)
-					isExit = gameBudgetbar->handleClick(x, y);
-			}
-			else if (x >= 550 && x <= 660 && y >= 100 && y <= 210)
-			{
-				const_cast<Game*>(this)->warehouseOpened = true;
+				{
+					isExit = gameBudgetbar->handleClick(x, y); // feature 26
+				}
 			}
 		}
-		drawWarehouseWindow();	
 		pWind->UpdateBuffer();
 		Sleep(30);
+		// Note: Add logic here for clicking the actual play area if needed!
 
 	} while (!isExit);
 }
