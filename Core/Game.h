@@ -28,8 +28,8 @@ public:
 	int budget = 3000;
 	mutable int timerValue = 60;
 	int goal = 5000;
-	mutable int level = 0;
-	int animalCount = 0;
+	mutable int level = 1;
+	mutable int animalCount = 0;
 
 	Game();
 	~Game();
@@ -58,7 +58,10 @@ public:
 
 	void intialTimer() const;
 	void updateTime() const;
+	
 	void spawnWolf() const;
+	void wolfKill() const;
+
 	// Features 26,27
 	void pauseGame(); 
 	void resumeGame();

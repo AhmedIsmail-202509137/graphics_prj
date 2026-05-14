@@ -282,10 +282,10 @@ void Game::drawGameOverText() const
 
 void Game::spawnWolf() const
 {
-	int spawnInterval = 21 - level;
+	int spawnInterval = 22 - (level);
 	if (spawnInterval <= 0)
 	{
-		spawnInterval = 1;
+		spawnInterval = 3;
 	}
 
 	if ((int)timerValue % spawnInterval == 0 && timerValue != lastWolfSpawnTimerValue && Wolf::count < 20)
@@ -300,10 +300,14 @@ void Game::spawnWolf() const
 // feature 11
 void Game::intialTimer() const
 {
-	if (timerValue <= 0)
+	if (budget == goal)
 	{
-		level++;
 		timerValue = 60 - (10 * (level - 1));
+		if (timerValue < 20) // to limit intial timer to 20
+		{
+			timerValue = 20;
+		}
+
 		lastRealTime = time(0);
 	}
 }
@@ -519,6 +523,41 @@ void Game::saveGame() // feature 28
 	printMessage("Game saved to savegame.txt");
 }
 
+void Game::wolfKill() const
+{
+	for (int i = 0; i < Wolf::count; i++)
+	{
+		if (Wolf::wolfList[i] == nullptr)
+		{
+			continue;
+		}
+		if (!isPaused)
+		{
+			for (int j = 0; j < ChickIcon::count; j++)
+			{
+				if (Wolf::wolfList[i]->CollisionDetection(*ChickIcon::chickList[j]))
+				{
+					delete ChickIcon::chickList[j];
+					ChickIcon::chickList[j] = ChickIcon::chickList[ChickIcon::count - 1];
+					ChickIcon::count--;
+					Game::animalCount--;
+					cout << "wolf ate a chick" << endl;
+				}
+			}
+			for (int j = 0; j < CowIcon::count; j++)
+			{
+				if (Wolf::wolfList[i]->CollisionDetection(*CowIcon::cowList[j]))
+				{
+					delete CowIcon::cowList[j];
+					CowIcon::cowList[j] = CowIcon::cowList[CowIcon::count - 1];
+					CowIcon::count--;
+					Game::animalCount--;
+					cout << "wolf ate a cow" << endl;
+				}
+			}
+		}
+	}
+}
 
 bool Game::getPausedState() const
 {
@@ -595,11 +634,14 @@ void Game::go() const
 			CowIcon::cowList[i]->drawProduct();
 			CowIcon::cowList[i]->drawCounter();
 		}
-
+		
 		if (!isPaused)
 		{
 			spawnWolf(); // feature 26
 		}
+
+		wolfKill();
+
 		for (int i = 0; i < Wolf::count; i++)
 		{
 			if (Wolf::wolfList[i] == nullptr)
