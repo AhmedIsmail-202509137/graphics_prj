@@ -549,7 +549,7 @@ void Game::go() const
 			gameBudgetbar->updateAnimals(); // feature 26
 		}
 		Pause(100);
-		//drawfieldboundary();
+		drawfieldboundary();
 
 		warehouse();
 

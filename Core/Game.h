@@ -66,7 +66,7 @@ public:
 	bool getPausedState() const;
 
 	void go() const;
-
+	 
 	window* getWind() const;		//returns a pointer to the graphics window
 };
 
