@@ -188,7 +188,7 @@ void WaterIcon::onClick()
 		waterList[count] = p;
 		waterCounters[count] = 5;
 		waterActive[count] = true;
-		pGame->drawFoodAreaAt(p);
+		pGame->drawFoodAreaAt(p, waterCounters[count]);
 		count++;
 	}
 }
@@ -208,7 +208,7 @@ void WaterIcon::updateWater()
 			waterCounters[i]--;
 			if (waterCounters[i] <= 0) { waterActive[i] = false; continue; }
 		}
-		pGame->drawFoodAreaAt(waterList[i]);
+		pGame->drawFoodAreaAt(waterList[i], waterCounters[i]);
 		window* pWind = pGame->getWind();
 		pWind->SetPen(BLACK, 1);
 		pWind->SetBrush(WHITE);

@@ -45,6 +45,8 @@ Game::Game()
 		}
 	}
 
+
+
 }
 
 Game::~Game()
@@ -123,18 +125,21 @@ void Game::drawFoodArea() const
 	int foodAreaTop = (config.windHeight - foodAreaSize) / 2;
 
 	point p;
-	p.x = foodAreaLeft;
 	p.y = foodAreaTop;
-	drawFoodAreaAt(p);
+	drawFoodAreaAt(p, 5);
 }
-
-void Game::drawFoodAreaAt(point topLeft) const
+void Game::drawFoodAreaAt(point topLeft, int counter) const
 {
 	int foodAreaSize = 1 * config.toolBarHeight;
 
 	pWind->SetPen(DARKGREEN, 2);
 	pWind->SetBrush(DARKGREEN);
 	pWind->DrawRectangle(topLeft.x, topLeft.y, topLeft.x + foodAreaSize, topLeft.y + foodAreaSize);
+
+	// Draw counter above food area 
+	pWind->SetPen(BLACK, 1);
+	pWind->SetFont(18, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(topLeft.x + 15, topLeft.y - 25, to_string(counter));
 }
 
 void Game::clearBudget() const
@@ -225,28 +230,37 @@ void Game::drawWarehouseWindow() const
 	pWind->DrawRectangle(860, 160, 890, 190);
 	pWind->SetPen(WHITE);
 	pWind->DrawString(867, 162, "X");
-}
-
+}// y m
 void Game::handleWarehouseClick(int x, int y)
 {
-	// Close Button logic
+	// Close Button
 	if (x >= 860 && x <= 890 && y >= 160 && y <= 190)
 	{
 		warehouseOpened = false;
+		return;
 	}
-	// Sell Eggs (Price: $20)
-	else if (x >= 650 && x <= 750 && y >= 280 && y <= 320)
+
+	// Sell Eggs
+	if (x >= 650 && x <= 750 && y >= 280 && y <= 320)
 	{
 		budget += warehouseEggs * 20;
 		warehouseEggs = 0;
+
+		drawWarehouseWindow();
+		return;
 	}
-	// Sell Milk (Price: $50)
-	else if (x >= 650 && x <= 750 && y >= 360 && y <= 400)
+
+	// Sell Milk
+	if (x >= 650 && x <= 750 && y >= 360 && y <= 400)
 	{
 		budget += warehouseMilk * 50;
 		warehouseMilk = 0;
+
+		drawWarehouseWindow();
+		return;
 	}
 }
+
 // Abdelaziz feature 1
 void Game::drawStatusText() const
 {
@@ -282,10 +296,10 @@ void Game::drawGameOverText() const
 
 void Game::spawnWolf() const
 {
-	int spawnInterval = 21 - level;
+	int spawnInterval = 22 - (level);
 	if (spawnInterval <= 0)
 	{
-		spawnInterval = 1;
+		spawnInterval = 3;
 	}
 
 	if ((int)timerValue % spawnInterval == 0 && timerValue != lastWolfSpawnTimerValue && Wolf::count < 20)
@@ -300,10 +314,14 @@ void Game::spawnWolf() const
 // feature 11
 void Game::intialTimer() const
 {
-	if (timerValue <= 0)
+	if (budget == goal)
 	{
-		level++;
 		timerValue = 60 - (10 * (level - 1));
+		if (timerValue < 20) // to limit intial timer to 20
+		{
+			timerValue = 20;
+		}
+
 		lastRealTime = time(0);
 	}
 }
@@ -347,6 +365,14 @@ void Game::syncTimersAfterResume()
 			ChickIcon::chickList[i]->lastTime = now; // feature 26
 		}
 	}
+	for (int i = 0; i < ChickIcon::count; i++) //25
+	{
+		if (ChickIcon::chickList[i] != nullptr)
+		{
+			ChickIcon::chickList[i]->productReady = false;
+		}
+	}
+
 
 	for (int i = 0; i < CowIcon::count; i++)
 	{
@@ -354,7 +380,15 @@ void Game::syncTimersAfterResume()
 		{
 			CowIcon::cowList[i]->lastTime = now; // feature 26
 		}
+	} 
+	for (int i = 0; i < CowIcon::count; i++)//25
+	{
+		if (CowIcon::cowList[i] != nullptr)
+		{
+			CowIcon::cowList[i]->productReady = false;
+		}
 	}
+
 
 	for (int i = 0; i < Wolf::count; i++)
 	{
@@ -383,6 +417,7 @@ void Game::clearDynamicObjects()//featuer 27
 
 	for (int i = 0; i < Wolf::count; i++)
 	{
+
 		delete Wolf::wolfList[i];
 		Wolf::wolfList[i] = nullptr; 
 	}
@@ -510,15 +545,77 @@ void Game::saveGame() // feature 28
 
 	//food areas
 	saveFile << "FOODAREAS " << WaterIcon::count << '\n';
+	static time_t lastFoodTime = time(0); // feature 26: to ensure food area timers are updated correctly even if the game is paused when saving
+
+	if (!isPaused && time(0) != lastFoodTime)
+	{
+		for (int i = 0; i < WaterIcon::count; i++)
+		{
+			if (WaterIcon::waterActive[i])
+			{
+				WaterIcon::waterCounters[i]--;
+
+				if (WaterIcon::waterCounters[i] <= 0)
+				{
+					WaterIcon::waterActive[i] = false;
+				}
+			}
+		}
+
+		lastFoodTime = time(0);
+	}
+
 	for (int i = 0; i < WaterIcon::count; i++)
-	{ 
+	{
+		if (WaterIcon::waterActive[i])
+		{
+			drawFoodAreaAt(WaterIcon::waterList[i], WaterIcon::waterCounters[i]);
+		}
+	}
+	for (int i = 0; i < WaterIcon::count; i++)
+	{
 		saveFile << "FOOD " << WaterIcon::waterList[i].x << ' ' << WaterIcon::waterList[i].y << ' ' << WaterIcon::waterCounters[i] << ' ' << WaterIcon::waterActive[i] << '\n';
 	}
 
 	saveFile.close();
 	printMessage("Game saved to savegame.txt");
-}
+} //
 
+void Game::wolfKill() const
+{
+	for (int i = 0; i < Wolf::count; i++)
+	{
+		if (Wolf::wolfList[i] == nullptr)
+		{
+			continue;
+		}
+		if (!isPaused)
+		{
+			for (int j = 0; j < ChickIcon::count; j++)
+			{
+				if (Wolf::wolfList[i]->CollisionDetection(*ChickIcon::chickList[j]))
+				{
+					delete ChickIcon::chickList[j];
+					ChickIcon::chickList[j] = ChickIcon::chickList[ChickIcon::count - 1];
+					ChickIcon::count--;
+					Game::animalCount--;
+					cout << "wolf ate a chick" << endl;
+				}
+			}
+			for (int j = 0; j < CowIcon::count; j++)
+			{
+				if (Wolf::wolfList[i]->CollisionDetection(*CowIcon::cowList[j]))
+				{
+					delete CowIcon::cowList[j];
+					CowIcon::cowList[j] = CowIcon::cowList[CowIcon::count - 1];
+					CowIcon::count--;
+					Game::animalCount--;
+					cout << "wolf ate a cow" << endl;
+				}
+			}
+		}
+	}
+}
 
 bool Game::getPausedState() const
 {
@@ -536,7 +633,7 @@ void Game::go() const
 	bool isExit = false;
 	pWind->SetBuffering(true);
 	// Change the title
-	pWind->ChangeTitle("- - - - - - Farm Frenzy (CIE101-project/ Team 16) - - - - - -");
+	pWind->ChangeTitle("- - - - - - Farm Frenzy (CIE101-project) - - - - - -");
 
 	
 	do
@@ -563,7 +660,10 @@ void Game::go() const
 
 		for (int i = 0; i < WaterIcon::count; i++)
 		{
-			drawFoodAreaAt(WaterIcon::waterList[i]);
+			if (WaterIcon::waterActive[i])
+			{
+				drawFoodAreaAt(WaterIcon::waterList[i], WaterIcon::waterCounters[i]);
+			}
 		}
 
 		for (int i = 0; i < ChickIcon::count; i++) 
@@ -595,11 +695,14 @@ void Game::go() const
 			CowIcon::cowList[i]->drawProduct();
 			CowIcon::cowList[i]->drawCounter();
 		}
-
+		
 		if (!isPaused)
 		{
 			spawnWolf(); // feature 26
 		}
+
+		wolfKill();
+
 		for (int i = 0; i < Wolf::count; i++)
 		{
 			if (Wolf::wolfList[i] == nullptr)
@@ -628,42 +731,75 @@ void Game::go() const
 				if (!isPaused)
 					isExit = gameBudgetbar->handleClick(x, y);
 			}
-			else
+			else //20 
 			{
-				for (int i = 0; i < Wolf::count; i++)
+				bool productClicked = false;
+
+				for (int i = 0; i < ChickIcon::count; i++)
 				{
-					if (Wolf::wolfList[i] != nullptr &&
-						x >= Wolf::wolfList[i]->curr_pos.x && x <= Wolf::wolfList[i]->curr_pos.x + 50 &&
-						y >= Wolf::wolfList[i]->curr_pos.y && y <= Wolf::wolfList[i]->curr_pos.y + 50)
+					if (ChickIcon::chickList[i] != nullptr &&
+						ChickIcon::chickList[i]->productReady &&
+						x >= ChickIcon::chickList[i]->productPoint.x &&
+						x <= ChickIcon::chickList[i]->productPoint.x + 30 &&
+						y >= ChickIcon::chickList[i]->productPoint.y &&
+						y <= ChickIcon::chickList[i]->productPoint.y + 30)
 					{
-						Wolf::wolfList[i]->clickCount++;
-						if (Wolf::wolfList[i]->clickCount >= 5)
-						{
-							delete Wolf::wolfList[i];
-							for (int j = i; j < Wolf::count - 1; j++)
-							{
-								Wolf::wolfList[j] = Wolf::wolfList[j + 1];
-							}
-							Wolf::count--;
-							Wolf::wolfList[Wolf::count] = nullptr;
-						}
+						warehouseEggs;
+						ChickIcon::chickList[i]->productReady = false;
+						productClicked = true;
 						break;
 					}
 				}
-			}
 
-			if (x >= 550 && x <= 660 && y >= 100 && y <= 210)
-			{
-				const_cast<Game*>(this)->warehouseOpened = true;
-			}
-		}
-		drawWarehouseWindow();
-		drawGameOverText();
-		pWind->UpdateBuffer();
-		Sleep(30);
+				if (!productClicked)
+				{
+					for (int i = 0; i < CowIcon::count; i++)
+					{
+						if (CowIcon::cowList[i] != nullptr &&
+							CowIcon::cowList[i]->productReady &&
+							x >= CowIcon::cowList[i]->productPoint.x &&
+							x <= CowIcon::cowList[i]->productPoint.x + 30 &&
+							y >= CowIcon::cowList[i]->productPoint.y &&
+							y <= CowIcon::cowList[i]->productPoint.y + 30)
+						{
+							warehouseMilk;
+							CowIcon::cowList[i]->productReady = false;
+							productClicked = true;
+							break;
+						}
+					}
+				}
 
-	} while (!isExit);
-}
+				if (!productClicked)
+				{
+					for (int i = 0; i < Wolf::count; i++)
+					{
+						if (Wolf::wolfList[i] != nullptr &&
+							x >= Wolf::wolfList[i]->curr_pos.x && x <= Wolf::wolfList[i]->curr_pos.x + 50 &&
+							y >= Wolf::wolfList[i]->curr_pos.y && y <= Wolf::wolfList[i]->curr_pos.y + 50)
+						{
+							Wolf::wolfList[i]->clickCount++;
+
+							if (Wolf::wolfList[i]->clickCount >= 5)
+							{
+								delete Wolf::wolfList[i];
+
+								for (int j = i; j < Wolf::count - 1; j++)
+								{
+									Wolf::wolfList[j] = Wolf::wolfList[j + 1];
+								}
+
+								Wolf::count--;
+								Wolf::wolfList[Wolf::count] = nullptr;
+							}
+
+							break;
+											}
+										}
+									}
+								}
+								}
 
 
-
+								} while (!isExit);
+						}
