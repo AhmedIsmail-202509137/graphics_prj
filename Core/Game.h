@@ -21,6 +21,7 @@ private:
 	int warehouseEggs = 0;        
 	int warehouseMilk = 0;
 	void drawWarehouseWindow() const; 
+	void drawGameOverText() const;
 	void handleWarehouseClick(int x, int y);
 	
 public:

@@ -254,13 +254,6 @@ void Game::drawStatusText() const
 
 	pWind->SetPen(WHITE, 1);
 	pWind->SetFont(20, BOLD, BY_NAME, "Arial");
-	if (isGameOver)
-	{
-		pWind->SetPen(RED, 1);
-		pWind->SetFont(28, BOLD, BY_NAME, "Arial");
-		pWind->DrawString(500, config.windHeight - 50, "Game Over");
-		return;
-	}
 	pWind->DrawString(20, config.windHeight - 35, "Timer: " + to_string(timerValue));
 	pWind->DrawString(260, config.windHeight - 35, "Goal: $" + to_string(goal));
 	pWind->DrawString(520, config.windHeight - 35, "Level: " + to_string(level));
@@ -269,6 +262,21 @@ void Game::drawStatusText() const
 	if (isPaused)
 	{
 		pWind->DrawString(980, config.windHeight - 35, "PAUSED");
+	}
+}
+
+void Game::drawGameOverText() const
+{
+	if (!isGameOver)
+	{
+		return;
+	}
+
+	if ((time(0) % 2) == 0)
+	{
+		pWind->SetPen(RED, 1);
+		pWind->SetFont(72, BOLD, BY_NAME, "Arial");
+		pWind->DrawString(390, 260, "GAME OVER");
 	}
 }
 
@@ -649,7 +657,8 @@ void Game::go() const
 				const_cast<Game*>(this)->warehouseOpened = true;
 			}
 		}
-		drawWarehouseWindow();	
+		drawWarehouseWindow();
+		drawGameOverText();
 		pWind->UpdateBuffer();
 		Sleep(30);
 
