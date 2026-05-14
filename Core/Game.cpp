@@ -620,7 +620,31 @@ void Game::go() const
 				if (!isPaused)
 					isExit = gameBudgetbar->handleClick(x, y);
 			}
-			else if (x >= 550 && x <= 660 && y >= 100 && y <= 210)
+			else
+			{
+				for (int i = 0; i < Wolf::count; i++)
+				{
+					if (Wolf::wolfList[i] != nullptr &&
+						x >= Wolf::wolfList[i]->curr_pos.x && x <= Wolf::wolfList[i]->curr_pos.x + 50 &&
+						y >= Wolf::wolfList[i]->curr_pos.y && y <= Wolf::wolfList[i]->curr_pos.y + 50)
+					{
+						Wolf::wolfList[i]->clickCount++;
+						if (Wolf::wolfList[i]->clickCount >= 5)
+						{
+							delete Wolf::wolfList[i];
+							for (int j = i; j < Wolf::count - 1; j++)
+							{
+								Wolf::wolfList[j] = Wolf::wolfList[j + 1];
+							}
+							Wolf::count--;
+							Wolf::wolfList[Wolf::count] = nullptr;
+						}
+						break;
+					}
+				}
+			}
+
+			if (x >= 550 && x <= 660 && y >= 100 && y <= 210)
 			{
 				const_cast<Game*>(this)->warehouseOpened = true;
 			}

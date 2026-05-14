@@ -7,7 +7,7 @@ class ToolbarIcon :public Drawable
 private:
 	string image_path;
 	string buttonText;
-	color buttonColor;
+	color buttonColor;	
 public:
 	ToolbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path, string text = "", color fillColor = LIGHTGRAY);
 	virtual void draw() const override;

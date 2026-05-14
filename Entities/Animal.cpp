@@ -19,6 +19,7 @@ Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string i
 	productReady = false;
 	productImage = r_productImage;
 	productPoint = r_point;
+	productCount = 0;
 }
 
 
@@ -46,6 +47,11 @@ void Animal::updateCounter()
 		counter = 0;
 		productPoint.x = RefPoint.x + 10;
 		productPoint.y = RefPoint.y + height + 5;
+		if (productCount < 100)
+		{
+			productPoints[productCount] = productPoint;
+			productCount++;
+		}
 		productReady = true;
 		lastTime = now;
 	}
@@ -56,7 +62,10 @@ void Animal::drawProduct() const
 	if (productReady == true)
 	{
 		window* pWind = pGame->getWind();
-		pWind->DrawImage(productImage, productPoint.x, productPoint.y, 30, 30);
+		for (int i = 0; i < productCount; i++)
+		{
+			pWind->DrawImage(productImage, productPoints[i].x, productPoints[i].y, 30, 30);
+		}
 	}
 }
 
@@ -168,6 +177,7 @@ void Milk::draw() const
 
 Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path) : Animal(r_pGame, { 0,0 }, r_width, r_height, img_path, 0, "")
 {
+	clickCount = 0;
 	std::random_device rd;
 	std::mt19937 gen(rd());
 

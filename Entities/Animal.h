@@ -20,6 +20,8 @@ public:
 	bool productReady;
 	string productImage;
 	point productPoint;
+	point productPoints[100];
+	int productCount;
 	void updateCounter();
 	void drawProduct() const;
 
@@ -66,6 +68,7 @@ class Wolf : public Animal
 public:
 	Wolf(Game* r_pGame, int r_width, int r_height, string img_path);
 	virtual void moveStep();
+	int clickCount;
 	static int count;
 	static Wolf** wolfList;
 };
