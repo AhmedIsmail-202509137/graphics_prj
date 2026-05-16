@@ -72,5 +72,7 @@ public:
 	int clickCount;
 	static int count;
 	static Wolf** wolfList;
+	int velocity; 
 };
+
 

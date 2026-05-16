@@ -1,4 +1,4 @@
-#include "Game.h"
+﻿#include "Game.h"
 #include "../UI/Toolbar.h"
 #include "../Config/GameConfig.h"
 #include "../CMUgraphicsLib/auxil.h"
@@ -243,7 +243,7 @@ void Game::handleWarehouseClick(int x, int y)
 	// Sell Eggs
 	if (x >= 650 && x <= 750 && y >= 280 && y <= 320)
 	{
-		budget += warehouseEggs * 20;
+		budget += warehouseEggs * 200;
 		warehouseEggs = 0;
 
 		drawWarehouseWindow();
@@ -253,7 +253,7 @@ void Game::handleWarehouseClick(int x, int y)
 	// Sell Milk
 	if (x >= 650 && x <= 750 && y >= 360 && y <= 400)
 	{
-		budget += warehouseMilk * 50;
+		budget += warehouseMilk * 500;
 		warehouseMilk = 0;
 
 		drawWarehouseWindow();
@@ -293,22 +293,29 @@ void Game::drawGameOverText() const
 		pWind->DrawString(390, 260, "GAME OVER");
 	}
 }
-void Game::spawnWolf() const
+void Game::spawnWolf() const //first feature 
 {
-	int spawnInterval = 22 - (level);
+	int spawnInterval = 22 - level;
 	if (spawnInterval <= 0)
-	{
 		spawnInterval = 3;
-	}
 
-	if ((int)timerValue % spawnInterval == 0 && timerValue != lastWolfSpawnTimerValue && Wolf::count < 20)
+	int wolfVelocity = 5 + (level * 2); // level 1→7, level 5→15, level 10→25
+	int spawnCount = 1 + (level / 5);
+
+	if ((int)timerValue % spawnInterval == 0
+		&& timerValue != lastWolfSpawnTimerValue
+		&& Wolf::count < 20)
 	{
-		Wolf::wolfList[Wolf::count] = new Wolf(const_cast<Game*>(this), 50, 50, "images\\wolf.jpg");
-		Wolf::count++;
+		for (int i = 0; i < spawnCount && Wolf::count < 20; i++)
+		{
+			Wolf::wolfList[Wolf::count] = new Wolf(
+				const_cast<Game*>(this), 50, 50, "images\\wolf.jpg", wolfVelocity
+			);
+			Wolf::count++;
+		}
 		lastWolfSpawnTimerValue = timerValue;
 	}
 }
-
 
 // feature 11
 void Game::intialTimer() const
@@ -458,9 +465,9 @@ void Game::resumeGame()//feature 26
 void Game::restartGame()// feature 27
 {
 	clearDynamicObjects(); 
-	budget = 3000; 
+	budget = 2200; 
 	timerValue = 60; 
-	goal = 5000; 
+	goal = 2100; 
 	level = 0; 
 	animalCount = 0; 
 	lastRealTime = time(0); 
