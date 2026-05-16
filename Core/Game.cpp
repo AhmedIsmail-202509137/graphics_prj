@@ -243,7 +243,7 @@ void Game::handleWarehouseClick(int x, int y)
 	// Sell Eggs
 	if (x >= 650 && x <= 750 && y >= 280 && y <= 320)
 	{
-		budget += warehouseEggs * 20;
+		budget += warehouseEggs * 200;
 		warehouseEggs = 0;
 
 		drawWarehouseWindow();
@@ -253,7 +253,7 @@ void Game::handleWarehouseClick(int x, int y)
 	// Sell Milk
 	if (x >= 650 && x <= 750 && y >= 360 && y <= 400)
 	{
-		budget += warehouseMilk * 50;
+		budget += warehouseMilk * 500;
 		warehouseMilk = 0;
 
 		drawWarehouseWindow();
@@ -475,7 +475,7 @@ void Game::restartGame()// feature 27
 
 void Game::saveGame() // feature 28
 { 
-	string saveFilePath = "D:\\Study\\ZC\\Spring 2026\\CIE 101 (C++ and OOP)\\CIE101_ProjectStartupCode\\savegame.txt"; 
+	string saveFilePath = "savegame.txt";
 	std::ofstream saveFile(saveFilePath); 
 	saveFile << "LEVEL " << level << '\n';
 	saveFile << "BUDGET " << budget << '\n';
@@ -591,7 +591,7 @@ void Game::saveGame() // feature 28
 
 void Game::loadGame() // feature 29
 {
-	string saveFilePath = "D:\\Study\\ZC\\Spring 2026\\CIE 101 (C++ and OOP)\\CIE101_ProjectStartupCode\\savegame.txt";
+	string saveFilePath = "savegame.txt";
 	std::ifstream loadFile(saveFilePath);
 
 	clearDynamicObjects(); 

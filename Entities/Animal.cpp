@@ -201,8 +201,8 @@ Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_p
 		std::mt19937 gen(rd());
 		std::uniform_int_distribution<int> dist(-10, 10);
 
-		curr_pos.x += dist(gen);
-		curr_pos.y += dist(gen);
+		curr_pos.x += dist(gen)*pGame->level;
+		curr_pos.y += dist(gen)*pGame->level;
 
 		if (curr_pos.x < range_min_x) curr_pos.x = range_min_x;
 		if (curr_pos.x > range_max_x) curr_pos.x = range_max_x;

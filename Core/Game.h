@@ -26,7 +26,7 @@ private:
 public:
 	int budget = 3000;
 	mutable int timerValue = 60;
-	mutable int goal = 5000;
+	mutable int goal = 4000;
 	mutable int level = 1;
 	mutable int animalCount = 0;
 
