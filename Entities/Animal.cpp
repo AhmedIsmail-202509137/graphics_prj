@@ -175,10 +175,8 @@ void Milk::draw() const
 	pWind->DrawImage("images\\milk.jpg", RefPoint.x, RefPoint.y, width, height);
 }
 
-Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path, int vel) // fixed feature 
-	: Animal(r_pGame, { 0,0 }, r_width, r_height, img_path, 0, "")
+Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path) : Animal(r_pGame, { 0,0 }, r_width, r_height, img_path, 0, "")
 {
-	velocity = vel; // احفظ السرعة
 	clickCount = 0;
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -190,29 +188,29 @@ Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path, int vel) /
 	curr_pos.y = dist2(gen);
 	RefPoint = curr_pos;
 }
-Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path, 0, "") // feature 29
 
+Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path, 0, "") // feature 29
 { // feature 29
 	clickCount = 0; // feature 29
 	curr_pos = r_point; // feature 29
 	RefPoint = curr_pos; // feature 29
 } // feature 29
-void Wolf::moveStep() //fixed feature
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<int> dist(-velocity, velocity); // ← بدل -10, 10
+	void Wolf::moveStep()
+	{ //magdy m
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<int> dist(-10, 10);
 
-	curr_pos.x += dist(gen);
-	curr_pos.y += dist(gen);
+		curr_pos.x += dist(gen);
+		curr_pos.y += dist(gen);
 
-	if (curr_pos.x < range_min_x) curr_pos.x = range_min_x;
-	if (curr_pos.x > range_max_x) curr_pos.x = range_max_x;
-	if (curr_pos.y < range_min_y) curr_pos.y = range_min_y;
-	if (curr_pos.y > range_max_y) curr_pos.y = range_max_y;
+		if (curr_pos.x < range_min_x) curr_pos.x = range_min_x;
+		if (curr_pos.x > range_max_x) curr_pos.x = range_max_x;
+		if (curr_pos.y < range_min_y) curr_pos.y = range_min_y;
+		if (curr_pos.y > range_max_y) curr_pos.y = range_max_y;
 
-	RefPoint = curr_pos;
-}
+		RefPoint = curr_pos; 
+	}
 
 
 

@@ -24,9 +24,9 @@ private:
 	void handleWarehouseClick(int x, int y);
 	
 public:
-	int budget = 2200;
+	int budget = 3000;
 	mutable int timerValue = 60;
-	mutable int goal = 2100;
+	mutable int goal = 5000;
 	mutable int level = 1;
 	mutable int animalCount = 0;
 
