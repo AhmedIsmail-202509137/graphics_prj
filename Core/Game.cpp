@@ -775,7 +775,7 @@ void Game::go() const
 						y >= ChickIcon::chickList[i]->productPoint.y &&
 						y <= ChickIcon::chickList[i]->productPoint.y + 30)
 					{
-						warehouseEggs;
+						const_cast<Game*>(this)->warehouseEggs++;
 						ChickIcon::chickList[i]->productReady = false;
 						productClicked = true;
 						break;
@@ -793,7 +793,7 @@ void Game::go() const
 							y >= CowIcon::cowList[i]->productPoint.y &&
 							y <= CowIcon::cowList[i]->productPoint.y + 30)
 						{
-							warehouseMilk;
+							const_cast<Game*>(this)->warehouseMilk++;
 							CowIcon::cowList[i]->productReady = false;
 							productClicked = true;
 							break;
