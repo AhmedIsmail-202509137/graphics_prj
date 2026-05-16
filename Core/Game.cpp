@@ -799,7 +799,10 @@ void Game::go() const
 									}
 								}
 								}
-
+		drawWarehouseWindow();
+		drawGameOverText();
+		pWind->UpdateBuffer();
+		Sleep(30);
 
 								} while (!isExit);
 						}
