@@ -577,6 +577,11 @@ void Game::saveGame() // feature 28
 		saveFile << "FOOD " << WaterIcon::waterList[i].x << ' ' << WaterIcon::waterList[i].y << ' ' << WaterIcon::waterCounters[i] << ' ' << WaterIcon::waterActive[i] << '\n';
 	}
 
+	saveFile << '\n'; // feature 28
+	saveFile << "WAREHOUSE" << '\n'; // feature 28
+	saveFile << "EGGS " << warehouseEggs << '\n'; // feature 28
+	saveFile << "MILK " << warehouseMilk << '\n'; // feature 28
+
 	saveFile.close();
 	printMessage("Game saved to savegame.txt");
 } //
@@ -842,3 +847,5 @@ void Game::go() const
 
 								} while (!isExit);
 						}
+
+
