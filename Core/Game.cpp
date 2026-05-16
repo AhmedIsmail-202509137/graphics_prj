@@ -674,7 +674,22 @@ void Game::go() const
 			}
 			if (!isPaused)
 			{
-				ChickIcon::chickList[i]->moveStep(); // feature 26
+				ChickIcon::chickList[i]->moveStep(); 	// feature 26
+				for (int j = 0; j < WaterIcon::count; j++)
+				{
+					if (WaterIcon::waterActive[j] &&
+						ChickIcon::chickList[i]->curr_pos.x < WaterIcon::waterList[j].x + 50 &&
+						ChickIcon::chickList[i]->curr_pos.x + 50 > WaterIcon::waterList[j].x &&
+						ChickIcon::chickList[i]->curr_pos.y < WaterIcon::waterList[j].y + 50 &&
+						ChickIcon::chickList[i]->curr_pos.y + 50 > WaterIcon::waterList[j].y)
+					{
+						WaterIcon::waterCounters[j]--;
+
+						if (WaterIcon::waterCounters[j] <= 0)
+							WaterIcon::waterActive[j] = false;
+					}
+				}
+			
 			}
 			ChickIcon::chickList[i]->draw();
 			ChickIcon::chickList[i]->drawProduct();
@@ -690,6 +705,22 @@ void Game::go() const
 			if (!isPaused)
 			{
 				CowIcon::cowList[i]->moveStep(); // feature 26
+				for (int j = 0; j < WaterIcon::count; j++)
+				{
+					if (WaterIcon::waterActive[j] &&
+						CowIcon::cowList[i]->curr_pos.x < WaterIcon::waterList[j].x + 50 &&
+						CowIcon::cowList[i]->curr_pos.x + 50 > WaterIcon::waterList[j].x &&
+						CowIcon::cowList[i]->curr_pos.y < WaterIcon::waterList[j].y + 50 &&
+						CowIcon::cowList[i]->curr_pos.y + 50 > WaterIcon::waterList[j].y)
+					{
+						WaterIcon::waterCounters[j]--;
+
+						if (WaterIcon::waterCounters[j] <= 0)
+							WaterIcon::waterActive[j] = false;
+					}
+				}
+
+
 			}
 			CowIcon::cowList[i]->draw();
 			CowIcon::cowList[i]->drawProduct();
@@ -798,6 +829,11 @@ void Game::go() const
 										}
 									}
 								}
+			if (x >= 550 && x <= 660 && y >= 100 && y <= 210)
+			{
+				const_cast<Game*>(this)->warehouseOpened = true;
+			}
+
 								}
 		drawWarehouseWindow();
 		drawGameOverText();
