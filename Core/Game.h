@@ -66,6 +66,7 @@ public:
 	void resumeGame();
 	void restartGame();
 	void saveGame();
+	void loadGame(); // feature 29
 	bool getPausedState() const;
 
 
@@ -107,4 +108,5 @@ public:
 
 	window* getWind() const;		//returns a pointer to the graphics window
 };
+
 

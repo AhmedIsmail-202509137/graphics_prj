@@ -82,7 +82,7 @@ LoadGameIcon::LoadGameIcon(Game* r_pGame, point r_point, int r_width, int r_heig
 
 void LoadGameIcon::onClick()
 {
-
+	pGame->loadGame(); // feature 29
 }
 
 Toolbar::Toolbar(Game* r_pGame, point r_point, int r_width, int r_height) : Drawable(r_pGame, r_point, r_width, r_height)
@@ -149,3 +149,4 @@ bool Toolbar::handleClick(int x, int y)
 
 	return false;
 }
+

@@ -188,6 +188,13 @@ Wolf::Wolf(Game* r_pGame, int r_width, int r_height, string img_path) : Animal(r
 	curr_pos.y = dist2(gen);
 	RefPoint = curr_pos;
 }
+
+Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path, 0, "") // feature 29
+{ // feature 29
+	clickCount = 0; // feature 29
+	curr_pos = r_point; // feature 29
+	RefPoint = curr_pos; // feature 29
+} // feature 29
 	void Wolf::moveStep()
 	{ //magdy m
 		std::random_device rd;
@@ -274,5 +281,8 @@ void Cow::drawCounter() const
 	pWind->DrawString(counterLeft + 5, counterTop + 2,
 		to_string(remainingTime));
 }
+
+
+
 
 

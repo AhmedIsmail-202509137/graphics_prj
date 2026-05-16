@@ -577,15 +577,139 @@ void Game::saveGame() // feature 28
 		saveFile << "FOOD " << WaterIcon::waterList[i].x << ' ' << WaterIcon::waterList[i].y << ' ' << WaterIcon::waterCounters[i] << ' ' << WaterIcon::waterActive[i] << '\n';
 	}
 
-	saveFile << '\n'; // feature 28
-	saveFile << "WAREHOUSE" << '\n'; // feature 28
-	saveFile << "EGGS " << warehouseEggs << '\n'; // feature 28
-	saveFile << "MILK " << warehouseMilk << '\n'; // feature 28
+	saveFile << '\n';
+	saveFile << "WAREHOUSE" << '\n';
+	saveFile << "EGGS " << warehouseEggs << '\n';
+	saveFile << "MILK " << warehouseMilk << '\n';
 
 	saveFile.close();
 	printMessage("Game saved to savegame.txt");
 } //
 
+void Game::loadGame() // feature 29
+{
+	string saveFilePath = "D:\\Study\\ZC\\Spring 2026\\CIE 101 (C++ and OOP)\\CIE101_ProjectStartupCode\\savegame.txt";
+	std::ifstream loadFile(saveFilePath);
+
+	clearDynamicObjects(); 
+	warehouseEggs = 0; 
+	warehouseMilk = 0;
+	warehouseOpened = false; 
+
+	string label;
+	int loadedPaused = 0; 
+	int loadedGameOver = 0; 
+	int savedAnimalsCount = 0; 
+	int savedWolvesCount = 0; 
+	int savedFoodAreasCount = 0; 
+
+	loadFile >> label >> level; 
+	loadFile >> label >> budget; 
+	loadFile >> label >> timerValue; 
+	loadFile >> label >> goal; 
+	loadFile >> label >> animalCount; 
+	loadFile >> label >> loadedPaused; 
+	loadFile >> label >> loadedGameOver; 
+	loadFile >> label >> lastWolfSpawnTimerValue; 
+
+	isPaused = (loadedPaused != 0); 
+	isGameOver = (loadedGameOver != 0); 
+	animalCount = 0; 
+
+	loadFile >> label >> savedAnimalsCount; 
+	for (int i = 0; i < savedAnimalsCount; i++) 
+	{ 
+		string animalType; 
+		int x = 0; 
+		int y = 0; 
+		int loadedCounter = 0; 
+		int loadedProductReady = 0; 
+		int velX = 0; 
+		int velY = 0; 
+		int productX = 0; 
+		int productY = 0; 
+		loadFile >> animalType >> x >> y >> loadedCounter >> loadedProductReady >> velX >> velY >> productX >> productY; 
+		point loadedPoint{ x, y }; 
+		point loadedVelocity{ velX, velY }; 
+		point loadedProductPoint{ productX, productY }; 
+
+		if (animalType == "CHICK") 
+		{ 
+			ChickIcon::chickList[ChickIcon::count] = new Chick(this, loadedPoint, 50, 50, "images\\chick.jpg"); 
+			ChickIcon::chickList[ChickIcon::count]->curr_vel = loadedVelocity; 
+			ChickIcon::chickList[ChickIcon::count]->counter = loadedCounter; 
+			ChickIcon::chickList[ChickIcon::count]->productReady = (loadedProductReady != 0); 
+			ChickIcon::chickList[ChickIcon::count]->productPoint = loadedProductPoint; 
+			ChickIcon::chickList[ChickIcon::count]->productCount = (loadedProductReady != 0) ? 1 : 0; 
+			if (loadedProductReady != 0) 
+			{
+				ChickIcon::chickList[ChickIcon::count]->productPoints[0] = loadedProductPoint; 
+			} 
+			ChickIcon::chickList[ChickIcon::count]->lastTime = time(0); 
+			ChickIcon::count++; 
+			animalCount++; 
+		} 
+		else if (animalType == "COW") 
+		{ 
+			CowIcon::cowList[CowIcon::count] = new Cow(this, loadedPoint, 50, 50, "images\\cow.jpg"); 
+			CowIcon::cowList[CowIcon::count]->curr_vel = loadedVelocity; 
+			CowIcon::cowList[CowIcon::count]->counter = loadedCounter;
+			CowIcon::cowList[CowIcon::count]->productReady = (loadedProductReady != 0); 
+			CowIcon::cowList[CowIcon::count]->productPoint = loadedProductPoint; 
+			CowIcon::cowList[CowIcon::count]->productCount = (loadedProductReady != 0) ? 1 : 0; 
+			{ 
+				CowIcon::cowList[CowIcon::count]->productPoints[0] = loadedProductPoint; 
+			}
+			CowIcon::cowList[CowIcon::count]->lastTime = time(0);
+			CowIcon::count++;
+			animalCount++; 
+		} 
+	} 
+
+	loadFile >> label >> savedWolvesCount;
+	for (int i = 0; i < savedWolvesCount; i++) 
+	{ 
+		string wolfLabel; 
+		int x = 0; 
+		int y = 0; 
+		loadFile >> wolfLabel >> x >> y; 
+		point wolfPoint{ x, y }; 
+		Wolf::wolfList[Wolf::count] = new Wolf(this, wolfPoint, 50, 50, "images\\wolf.jpg"); 
+		Wolf::wolfList[Wolf::count]->lastTime = time(0); 
+		Wolf::wolfList[Wolf::count]->clickCount = 0; 
+		Wolf::count++; 
+	} 
+
+	loadFile >> label >> savedFoodAreasCount; 
+	WaterIcon::count = 0; 
+	for (int i = 0; i < savedFoodAreasCount; i++) 
+	{ 
+		string foodLabel; 
+		int x = 0; 
+		int y = 0; 
+		int savedCounter = 0; 
+		int savedActive = 0; 
+		loadFile >> foodLabel >> x >> y >> savedCounter >> savedActive; 
+		WaterIcon::waterList[WaterIcon::count].x = x; 
+		WaterIcon::waterList[WaterIcon::count].y = y; 
+		WaterIcon::waterCounters[WaterIcon::count] = savedCounter; 
+		WaterIcon::waterActive[WaterIcon::count] = (savedActive != 0);
+		WaterIcon::count++; 
+	} 
+
+	loadFile >> label; 
+	loadFile >> label >> warehouseEggs; 
+	loadFile >> label >> warehouseMilk;
+
+	lastRealTime = time(0); 
+	if (!isPaused) 
+	{ 
+		syncTimersAfterResume(); 
+	} 
+
+	loadFile.close(); 
+	printMessage("Game loaded from savegame.txt"); 
+} 
 void Game::wolfKill() const
 {
 	for (int i = 0; i < Wolf::count; i++)
@@ -847,5 +971,6 @@ void Game::go() const
 
 								} while (!isExit);
 						}
+
 
 

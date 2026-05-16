@@ -67,8 +67,10 @@ class Wolf : public Animal
 {
 public:
 	Wolf(Game* r_pGame, int r_width, int r_height, string img_path);
+	Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path); // feature 29
 	virtual void moveStep();
 	int clickCount;
 	static int count;
 	static Wolf** wolfList;
 };
+
