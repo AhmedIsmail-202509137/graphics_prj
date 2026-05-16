@@ -69,6 +69,38 @@ void Animal::drawProduct() const
 	}
 }
 
+bool Animal::collectProductAt(int x, int y)
+{
+	if (!productReady)
+	{
+		return false;
+	}
+
+	for (int i = 0; i < productCount; i++)
+	{
+		if (x >= productPoints[i].x && x <= productPoints[i].x + 30 &&
+			y >= productPoints[i].y && y <= productPoints[i].y + 30)
+		{
+			for (int j = i; j < productCount - 1; j++)
+			{
+				productPoints[j] = productPoints[j + 1];
+			}
+
+			productCount--;
+			productReady = (productCount > 0);
+
+			if (productCount > 0)
+			{
+				productPoint = productPoints[productCount - 1];
+			}
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
 
 Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path, 10, "images\\egg.jpg")
 {

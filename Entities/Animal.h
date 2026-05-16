@@ -24,6 +24,7 @@ public:
 	int productCount;
 	void updateCounter();
 	void drawProduct() const;
+	bool collectProductAt(int x, int y);
 
 
 	virtual void drawCounter() const;

@@ -901,14 +901,9 @@ void Game::go() const
 				for (int i = 0; i < ChickIcon::count; i++)
 				{
 					if (ChickIcon::chickList[i] != nullptr &&
-						ChickIcon::chickList[i]->productReady &&
-						x >= ChickIcon::chickList[i]->productPoint.x &&
-						x <= ChickIcon::chickList[i]->productPoint.x + 30 &&
-						y >= ChickIcon::chickList[i]->productPoint.y &&
-						y <= ChickIcon::chickList[i]->productPoint.y + 30)
+						ChickIcon::chickList[i]->collectProductAt(x, y))
 					{
 						const_cast<Game*>(this)->warehouseEggs++;
-						ChickIcon::chickList[i]->productReady = false;
 						productClicked = true;
 						break;
 					}
@@ -919,14 +914,9 @@ void Game::go() const
 					for (int i = 0; i < CowIcon::count; i++)
 					{
 						if (CowIcon::cowList[i] != nullptr &&
-							CowIcon::cowList[i]->productReady &&
-							x >= CowIcon::cowList[i]->productPoint.x &&
-							x <= CowIcon::cowList[i]->productPoint.x + 30 &&
-							y >= CowIcon::cowList[i]->productPoint.y &&
-							y <= CowIcon::cowList[i]->productPoint.y + 30)
+							CowIcon::cowList[i]->collectProductAt(x, y))
 						{
 							const_cast<Game*>(this)->warehouseMilk++;
-							CowIcon::cowList[i]->productReady = false;
 							productClicked = true;
 							break;
 						}
