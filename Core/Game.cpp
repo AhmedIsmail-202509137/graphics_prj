@@ -314,7 +314,7 @@ void Game::spawnWolf() const
 // feature 11
 void Game::intialTimer() const
 {
-	if (budget == goal)
+	if (budget >= goal)
 	{
 		timerValue = 60 - (10 * (level - 1));
 		if (timerValue < 20) // to limit intial timer to 20
@@ -633,7 +633,7 @@ void Game::go() const
 	bool isExit = false;
 	pWind->SetBuffering(true);
 	// Change the title
-	pWind->ChangeTitle("- - - - - - Farm Frenzy (CIE101-project) - - - - - -");
+	pWind->ChangeTitle("- - - - - - Farm Frenzy (CIE101-project/ Team 16) - - - - - -");
 
 	
 	do
