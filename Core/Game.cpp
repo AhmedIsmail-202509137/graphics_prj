@@ -294,18 +294,27 @@ void Game::drawGameOverText() const
 	}
 }
 
-void Game::spawnWolf() const
+void Game::spawnWolf() const //fix mainly in this function
 {
-	int spawnInterval = 22 - (level);
+	int spawnInterval = 22 - level;
 	if (spawnInterval <= 0)
-	{
 		spawnInterval = 3;
-	}
 
-	if ((int)timerValue % spawnInterval == 0 && timerValue != lastWolfSpawnTimerValue && Wolf::count < 20)
+	int spawnCount = 1 + (level / 5);
+
+	float wolfVelocity = 1.0f + (level * 0.5f);
+
+	if ((int)timerValue % spawnInterval == 0
+		&& timerValue != lastWolfSpawnTimerValue
+		&& Wolf::count < 20)
 	{
-		Wolf::wolfList[Wolf::count] = new Wolf(const_cast<Game*>(this), 50, 50, "images\\wolf.jpg");
-		Wolf::count++;
+		for (int i = 0; i < spawnCount && Wolf::count < 20; i++)
+		{
+			Wolf::wolfList[Wolf::count] = new Wolf(
+				const_cast<Game*>(this), wolfVelocity, wolfVelocity, "images\\wolf.jpg"
+			);
+			Wolf::count++;
+		}
 		lastWolfSpawnTimerValue = timerValue;
 	}
 }
