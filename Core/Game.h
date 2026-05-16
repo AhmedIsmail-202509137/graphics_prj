@@ -26,7 +26,7 @@ private:
 public:
 	int budget = 3000;
 	mutable int timerValue = 60;
-	int goal = 5000;
+	mutable int goal = 5000;
 	mutable int level = 1;
 	mutable int animalCount = 0;
 
@@ -108,5 +108,7 @@ public:
 
 	window* getWind() const;		//returns a pointer to the graphics window
 };
+
+
 
 

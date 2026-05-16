@@ -316,6 +316,7 @@ void Game::intialTimer() const
 {
 	if (budget >= goal)
 	{
+		level++; //feature 34
 		timerValue = 60 - (10 * (level - 1));
 		if (timerValue < 20) // to limit intial timer to 20
 		{
@@ -971,6 +972,8 @@ void Game::go() const
 
 								} while (!isExit);
 						}
+
+
 
 
 
